@@ -7,9 +7,10 @@ GET http://localhost:3000/songs/1
 POST http://localhost:3000/songs
 Content-Type: application/json
 
-{
-    "duration":"2.00",
-    "release_Date":"23-10"
+{   "title":"Layi waysabi",
+    "artists":["Odumodu Black"],
+    "duration":"02:00",
+    "release_date":"2025-10-08"
 }
 
 

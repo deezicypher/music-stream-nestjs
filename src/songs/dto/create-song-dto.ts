@@ -5,10 +5,11 @@ export class CreateSongDTO{
     @IsNotEmpty()
     readonly title:string;
 
-    @IsString()
-    @IsArray()
+   
     @IsNotEmpty()
-    readonly artists:string[];
+    @IsArray()
+    @IsString({each:true})
+    readonly artists: string[];
 
     @IsNotEmpty()
     @IsDateString()
