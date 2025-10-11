@@ -1,0 +1,21 @@
+GET http://localhost:3000/songs
+
+### FInd song
+GET http://localhost:3000/songs/1
+
+### Create song
+POST http://localhost:3000/songs
+Content-Type: application/json
+
+{
+    "duration":"2.00",
+    "release_Date":"23-10"
+}
+
+
+### Update song
+PUT http://localhost:3000/songs/1
+
+
+### Delete song
+DELETE http://localhost:3000/songs/1
