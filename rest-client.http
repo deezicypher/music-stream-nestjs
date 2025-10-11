@@ -1,7 +1,10 @@
+GET http://localhost:3000
+
+###
 GET http://localhost:3000/songs
 
 ### FInd song
-GET http://localhost:3000/songs/s
+GET http://localhost:3000/songs/1
 
 ### Create song
 POST http://localhost:3000/songs
