@@ -47,7 +47,7 @@ const proConfig = {port:400}
 export class AppModule implements NestModule {
 
   constructor(private datasource:DataSource){
-    console.log('DB name', datasource.driver.database)
+    console.log('DB name', this.datasource.driver.database)
   }
   configure(consumer: MiddlewareConsumer) {
     // consumer.apply(LoggerMiddleware).forRoutes('songs'); // option no 1
