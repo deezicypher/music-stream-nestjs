@@ -13,11 +13,12 @@ Content-Type: application/json
 {   "title":"Layi wasabi",
     "artists":["Odumodu Black"],
     "duration":"02:00",
-    "release_date":"2025-10-08"
+    "release_date":"2025-10-08",
+    "lyrics":"Take man like joke like say i no sabi,Layi Wasabi,Joke man nothing wey you sabi"
 }
 
 
-### Update song
+### Update songs
 PUT http://localhost:3000/songs/1
 
 

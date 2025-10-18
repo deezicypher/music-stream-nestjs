@@ -2,18 +2,17 @@ import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param
 import { SongsService } from './songs.service';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { type Connection } from 'src/common/constants/connection';
+import { Song } from './song.entity';
 
 @Controller({path:'songs', scope:Scope.REQUEST})
 export class SongsController {
-    constructor(private songsService:SongsService,
-        // @Inject('CONNECTION')
-        // private connection: Connection,
+    constructor(private songsService:SongsService
     ){
-        // console.log(`Connection string ${this.connection.DB}`)
+        
         }
         ;
     @Post()
-    create(@Body() createSongDTO: CreateSongDTO ){
+    create(@Body() createSongDTO: CreateSongDTO ): Promise<Song>{
         return this.songsService.create(createSongDTO);
     };
 
