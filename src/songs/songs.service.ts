@@ -1,8 +1,9 @@
 import { Inject, Injectable, Scope } from '@nestjs/common';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { Song } from './song.entity';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateSongDTO } from './dto/update-song-dto';
 
 @Injectable({scope:Scope.TRANSIENT})
 export class SongsService {
@@ -37,5 +38,8 @@ export class SongsService {
 
     delete(id:number):Promise<DeleteResult>{
         return this.songsRepository.delete(id)
+    }
+    update(id:number, recordToUpdate:UpdateSongDTO):Promise<UpdateResult>{
+        return this.songsRepository.update(id,recordToUpdate)
     }
 }

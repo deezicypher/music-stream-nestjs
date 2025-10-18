@@ -3,7 +3,8 @@ import { SongsService } from './songs.service';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { type Connection } from 'src/common/constants/connection';
 import { Song } from './song.entity';
-import { DeleteResult } from 'typeorm';
+import { DeleteResult, UpdateResult } from 'typeorm';
+import { UpdateSongDTO } from './dto/update-song-dto';
 
 @Controller({path:'songs', scope:Scope.REQUEST})
 export class SongsController {
@@ -43,8 +44,13 @@ export class SongsController {
     };
 
     @Put(':id')
-    update(){
-        return 'Update song based on id';
+    update(
+        @Param('id', new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
+        id:number,
+          @Body()
+        updateSongDTO:UpdateSongDTO
+    ):Promise<UpdateResult>{
+        return this.songsService.update(id,updateSongDTO);
     };
 
     @Delete(':id')
