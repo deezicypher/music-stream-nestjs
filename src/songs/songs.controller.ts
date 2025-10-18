@@ -17,7 +17,7 @@ export class SongsController {
     };
 
     @Get()
-    findall(){
+    findall():Promise<Song[]>{
         try{
             return this.songsService.findAll();
         }catch(e){
@@ -37,8 +37,8 @@ export class SongsController {
         // @Param('id', parseIntPipe) // option 1
         @Param('id', new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
         id:number
-    ){
-        return `FInd song based on id ${typeof id}`;
+    ):Promise<Song | null>{
+        return this.songsService.findOne(id);
     };
 
     @Put(':id')
