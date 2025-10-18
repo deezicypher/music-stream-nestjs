@@ -3,6 +3,7 @@ import { SongsService } from './songs.service';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { type Connection } from 'src/common/constants/connection';
 import { Song } from './song.entity';
+import { DeleteResult } from 'typeorm';
 
 @Controller({path:'songs', scope:Scope.REQUEST})
 export class SongsController {
@@ -34,7 +35,7 @@ export class SongsController {
 
     @Get(':id')
     findOne(
-        // @Param('id', parseIntPipe) // option 1
+        // @Param('id', ParseIntPipe) // option 1
         @Param('id', new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
         id:number
     ):Promise<Song | null>{
@@ -47,7 +48,9 @@ export class SongsController {
     };
 
     @Delete(':id')
-    delete(){
-        return 'Delete song based on id';
+    delete(
+        @Param('id', new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
+        id:number):Promise<DeleteResult>{
+        return this.songsService.delete(id);
     };
 }

@@ -5,16 +5,15 @@ GET http://localhost:3000/songs
 
 ### FInd song
 GET http://localhost:3000/songs/1
-
 ### Create song
 POST http://localhost:3000/songs
 Content-Type: application/json
 
-{   "title":"Layi wasabi",
-    "artists":["Odumodu Black"],
-    "duration":"02:00",
-    "release_date":"2025-10-08",
-    "lyrics":"Take man like joke like say i no sabi,Layi Wasabi,Joke man nothing wey you sabi"
+{   "title":"God's plan",
+    "artists":["Drake"],
+    "duration":"02:50",
+    "release_date":"2025-03-18",
+    "lyrics":"And, they wishin' and wishin' and wishin' and wishin' They wishin' on me, yeah"
 }
 
 
@@ -23,4 +22,4 @@ PUT http://localhost:3000/songs/1
 
 
 ### Delete song
-DELETE http://localhost:3000/songs/1
+DELETE http://localhost:3000/songs/2
