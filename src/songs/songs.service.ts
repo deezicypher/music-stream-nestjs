@@ -4,6 +4,7 @@ import { Song } from './song.entity';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateSongDTO } from './dto/update-song-dto';
+import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 @Injectable({scope:Scope.TRANSIENT})
 export class SongsService {
@@ -41,5 +42,13 @@ export class SongsService {
     }
     update(id:number, recordToUpdate:UpdateSongDTO):Promise<UpdateResult>{
         return this.songsRepository.update(id,recordToUpdate)
+    }
+
+ 
+    async paginate(options:IPaginationOptions):Promise<Pagination<Song>>{
+        // box<T>(item: T) --> box<string>("hello"); That tells the function: “You’re working with a string.”
+        const queryBuilder = this.songsRepository.createQueryBuilder('c');
+        queryBuilder.orderBy('c.release_date','DESC')
+        return paginate<Song>(queryBuilder,options)
     }
 }
