@@ -9,9 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { Song } from './songs/song.entity';
+import { Artist } from './artists/artist.entity';
+import { User } from './users/user.entity';
 
-const devConfig = {port:3000}
-const proConfig = {port:400}
+
 
 @Module({
   imports: [
@@ -25,24 +26,12 @@ const proConfig = {port:400}
       username:process.env.DB_USERNAME,
       password:process.env.db_password,
       database:'spotify_nestjs',
-      entities:[Song],
+      entities:[Song,Artist,User],
       synchronize:true
     }),
     SongsModule],
   controllers: [AppController],
-  providers: [AppService,
-
-    {
-      provide: DevConfigService,
-      useClass: DevConfigService
-    },
-    {
-      provide: 'CONFIG',
-      useFactory: () => {
-        return process.env.NODE_ENV === 'dev' ? devConfig : proConfig
-      }
-    }    
-  ],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
 
