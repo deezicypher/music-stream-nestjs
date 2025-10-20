@@ -19,6 +19,11 @@ Content-Type: application/json
 
 ### Update songs
 PUT http://localhost:3000/songs/1
+Content-Type: application/json
+
+  {
+    "lyrics": "Take man like joke like say i no sabi,Layi Wasabi,Joke man nothing wey you sabi, i for like"
+  }
 
 
 ### Delete song
