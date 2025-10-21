@@ -11,6 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 import { Song } from './songs/song.entity';
 import { Artist } from './artists/artist.entity';
 import { User } from './users/user.entity';
+import { Playlist } from './playlists/playlist.entity';
+import { PlaylistsModule } from './playlists/playlists.module';
+
 
 
 
@@ -26,10 +29,11 @@ import { User } from './users/user.entity';
       username:process.env.DB_USERNAME,
       password:process.env.db_password,
       database:'spotify_nestjs',
-      entities:[Song,Artist,User],
+      entities:[Song,Artist,User,Playlist],
       synchronize:true
     }),
-    SongsModule],
+    SongsModule,
+    PlaylistsModule],
   controllers: [AppController],
   providers: [AppService],
 })

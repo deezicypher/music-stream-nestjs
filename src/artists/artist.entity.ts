@@ -7,7 +7,7 @@ export class Artist{
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(()=> User)
+    @OneToOne(()=> User) // only Artist knows about User, not the other way around.
     @JoinColumn()
     user: User;
 
