@@ -10,7 +10,7 @@ POST http://localhost:3000/songs
 Content-Type: application/json
 
 {   "title":"God's plan",
-    "artists":["Drake"],
+    "artists":[1,2],
     "duration":"02:50",
     "release_date":"2025-03-18",
     "lyrics":"And, they wishin' and wishin' and wishin' and wishin' They wishin' on me, yeah"
@@ -28,3 +28,14 @@ Content-Type: application/json
 
 ### Delete song
 DELETE http://localhost:3000/songs/2
+
+
+### create palylist
+POST  http://localhost:3000/playlists
+Content-Type: application/json
+
+{
+  "name": "life is good",
+  "songs":[3],
+  "user":3
+}
