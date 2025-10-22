@@ -4,6 +4,7 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDTO, SafeUserDTO } from './dto/create-user-dto';
 import * as bcrypt from 'bcryptjs';
+import { LoginDTO } from 'src/auth/dto/login-dto';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,7 @@ export class UsersService {
         return safeUser;
     }
 
-    async findOne(data:Partial<User>):Promise<User>{
+    async findOne(data:LoginDTO):Promise<User>{
         const user = await this.userRepo.findOneBy({email:data.email})
         if(!user){
             throw new UnauthorizedException('Could not find user')
