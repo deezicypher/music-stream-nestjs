@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { LoginDTO } from './dto/login-dto';
 import * as bcrypt from 'bcryptjs'
@@ -7,6 +7,7 @@ import { ArtistsService } from 'src/artists/artists.service';
 import { PayloadType } from './types/payload.type';
 import { Enable2FAType } from './types/auth-types';
 import * as speakeasy from 'speakeasy';
+import { UpdateResult } from 'typeorm';
 
 
 @Injectable()
@@ -39,6 +40,9 @@ export class AuthService {
       throw new NotFoundException(`User with ${userId} not found`)
     }
     if(user.enable2FA){
+      if(!user.twoFASecret){
+        throw new BadRequestException('2FA secret is missing for this user');
+      }
       return {secret: user.twoFASecret}
     }
     const secret = speakeasy.generateSecret()
@@ -52,12 +56,16 @@ export class AuthService {
     if(!user){
       throw new NotFoundException(`User with ${userId} not found`)
     }
+    if (!user.twoFASecret) {
+      throw new BadRequestException('2FA is not enabled for this user');
+    }
     try {
       const verified = speakeasy.totp.verify({
         secret:user.twoFASecret,
-        token,
+        token:token,
         encoding: 'base32'
       })
+   
       if(verified){
         return {verified:true}
       }else{
@@ -66,5 +74,9 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException('Error verifying token')
     }
+  }
+
+  async disable2fa(userId:number):Promise<UpdateResult>{
+    return this.userService.disable2fa(userId)
   }
 }
