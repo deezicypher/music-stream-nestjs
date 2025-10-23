@@ -26,7 +26,7 @@ export class SongsService {
         song.lyrics = songDTO.lyrics;
         song.release_date = songDTO.release_date;
 
-        const artists = await this.artistRepository.findBy({user: In(songDTO.artists)});
+        const artists = await this.artistRepository.findBy({id: In(songDTO.artists)});
         song.artists = artists;
 
         return  await this.songsRepository.save(song);

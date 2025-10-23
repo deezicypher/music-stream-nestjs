@@ -8,13 +8,13 @@ GET http://localhost:3000/songs/1
 ### Create song
 POST http://localhost:3000/songs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MDMyMywiZXhwIjoxNzYxMjY2NzIzfQ.CJy4cq38oBOFn1EJd6fr_uNNS_pzdM9byo6sfiVqnKQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
 
-{   "title":"Dying minute x2",
-    "artists":[2],
+{   "title":"Mavin's room",
+    "artists":[1],
     "duration":"02:50",
     "release_date":"2025-03-18",
-    "lyrics":"A thousand man shall fall a thousand men shall fall, at the mention of your name"
+    "lyrics":"we can do better"
 }
 
 
@@ -46,9 +46,9 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-"first_name": "Deezi",
-"last_name": "Codes",
-"email": "deezicodes@gmail.com",
+"first_name": "Deezix",
+"last_name": "Codesx",
+"email": "deezicodesx@gmail.com",
 "password": "123456"
 }
 
@@ -64,4 +64,4 @@ Content-Type: application/json
 
 ### Get Profile
 GET http://localhost:3000/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE3ODgwNywiZXhwIjoxNzYxMjY1MjA3fQ.uUtuwhx07nQevDqcba2ykBUpaL9i1DItKhL92ArXAjs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
