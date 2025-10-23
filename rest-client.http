@@ -8,12 +8,13 @@ GET http://localhost:3000/songs/1
 ### Create song
 POST http://localhost:3000/songs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MDMyMywiZXhwIjoxNzYxMjY2NzIzfQ.CJy4cq38oBOFn1EJd6fr_uNNS_pzdM9byo6sfiVqnKQ
 
-{   "title":"God's plan",
-    "artists":[1,2],
+{   "title":"Dying minute x2",
+    "artists":[2],
     "duration":"02:50",
     "release_date":"2025-03-18",
-    "lyrics":"And, they wishin' and wishin' and wishin' and wishin' They wishin' on me, yeah"
+    "lyrics":"A thousand man shall fall a thousand men shall fall, at the mention of your name"
 }
 
 
@@ -45,9 +46,9 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-"first_name": "john",
-"last_name": "doe",
-"email": "john@gmail.com",
+"first_name": "Deezi",
+"last_name": "Codes",
+"email": "deezicodes@gmail.com",
 "password": "123456"
 }
 
@@ -57,6 +58,10 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-"email": "john@gmail.com",
+"email": "drakegraham@gmail.com",
 "password": "123456"
 }
+
+### Get Profile
+GET http://localhost:3000/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE3ODgwNywiZXhwIjoxNzYxMjY1MjA3fQ.uUtuwhx07nQevDqcba2ykBUpaL9i1DItKhL92ArXAjs

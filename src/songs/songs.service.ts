@@ -22,13 +22,13 @@ export class SongsService {
         // save the song to database
         const song = new Song()
         song.title = songDTO.title;
-        song.artists = songDTO.artists;
         song.duration = songDTO.duration;
         song.lyrics = songDTO.lyrics;
         song.release_date = songDTO.release_date;
 
-        const artists = await this.artistRepository.findBy({id: In(songDTO.artists)});
+        const artists = await this.artistRepository.findBy({user: In(songDTO.artists)});
         song.artists = artists;
+
         return  await this.songsRepository.save(song);
         
     }
