@@ -46,4 +46,25 @@ export class AuthService {
     await this.userService.updateSecretKey(user.id, user.twoFASecret)
     return {secret:user.twoFASecret}
   }
+
+  async verify2fa(userId:number,token:string):Promise<{verified:boolean}>{
+    const user = await this.userService.findById(userId)
+    if(!user){
+      throw new NotFoundException(`User with ${userId} not found`)
+    }
+    try {
+      const verified = speakeasy.totp.verify({
+        secret:user.twoFASecret,
+        token,
+        encoding: 'base32'
+      })
+      if(verified){
+        return {verified:true}
+      }else{
+        return {verified: false}
+      }
+    } catch (error) {
+      throw new UnauthorizedException('Error verifying token')
+    }
+  }
 }
