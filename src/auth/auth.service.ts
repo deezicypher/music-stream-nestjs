@@ -16,13 +16,19 @@ export class AuthService {
     private jwtService:JwtService,
     private artistSevice:ArtistsService
   ){}
-  async login(loginDTO:LoginDTO):Promise<{access_token:string}>{
+  async login(loginDTO:LoginDTO):Promise<{access_token:string} | {verify2fa:string,message:string}>{
     const user = await this.userService.findOne(loginDTO)
     const passwordMatched = await bcrypt.compare(loginDTO.password,user.password)
 
     if(passwordMatched){
      
         const payload: PayloadType = {email:user.email,userId:user.id}
+        if(user.enable2FA && user.twoFASecret){
+          return {
+            verify2fa:'http://localhost:3000/auth/validate-2fa',
+            message:'Please send the one-time password/token from your Google Authenticator App'
+          }
+        }
         const artist = await this.artistSevice.findArtist(user.id)
         if(artist){
           payload.artistId= artist.id
