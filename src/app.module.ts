@@ -15,6 +15,7 @@ import { Playlist } from './playlists/playlist.entity';
 import { PlaylistsModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { ArtistsModule } from './artists/artists.module';
 
 
 
@@ -37,7 +38,8 @@ import { UsersModule } from './users/users.module';
     SongsModule,
     PlaylistsModule,
     AuthModule,
-    UsersModule],
+    UsersModule,
+    ArtistsModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -6,12 +6,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { authConstants } from './auth.constants';
 import { JWTStrategy } from './jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { ArtistsModule } from 'src/artists/artists.module';
 
 
 @Module({
   imports: [UsersModule, JwtModule.register({secret:authConstants.secret,
     signOptions:{expiresIn:'1d'}
-  }), PassportModule],
+  }), PassportModule,ArtistsModule],
   providers: [AuthService,JWTStrategy],
   controllers: [AuthController],
   exports: [AuthService]
