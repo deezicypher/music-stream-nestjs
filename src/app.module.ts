@@ -17,6 +17,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
 import { dataSourceOptions } from 'db/data-source';
+import { SeedModule } from './seed/seed.module';
 
 
 
@@ -31,7 +32,8 @@ import { dataSourceOptions } from 'db/data-source';
     PlaylistsModule,
     AuthModule,
     UsersModule,
-    ArtistsModule],
+    ArtistsModule,
+    SeedModule],
   controllers: [AppController],
   providers: [AppService],
 })
