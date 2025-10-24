@@ -5,6 +5,8 @@ import { Repository, UpdateResult } from 'typeorm';
 import { CreateUserDTO, SafeUserDTO } from './dto/create-user-dto';
 import * as bcrypt from 'bcryptjs';
 import { LoginDTO } from 'src/auth/dto/login-dto';
+import {v4 as uuid4} from 'uuid'
+
 
 @Injectable()
 export class UsersService {
@@ -14,10 +16,16 @@ export class UsersService {
     ){}
 
     async create(userDTO:CreateUserDTO):Promise<Partial<User>>{
+        const user = new User()
+        user.first_name = userDTO.first_name
+        user.last_name = userDTO.last_name
+        user.email = userDTO.email
+        user.apikey = uuid4()
+
         const salt = await bcrypt.genSalt();
-        userDTO.password = await bcrypt.hash(userDTO.password, salt);
-        const user = await this.userRepo.save(userDTO);
-        const { password, ...safeUser } = user;
+        user.password = await bcrypt.hash(userDTO.password, salt);
+        const savedUser = await this.userRepo.save(user);
+        const { password, ...safeUser } = savedUser;
         return safeUser;
     }
 
@@ -45,5 +53,9 @@ export class UsersService {
             twoFASecret:null,
             enable2FA:false
         })
+    }
+
+    findByApiKey(apikey:string):Promise<User|null>{
+        return this.userRepo.findOneBy({apikey})
     }
 }

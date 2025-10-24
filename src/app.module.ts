@@ -31,7 +31,7 @@ import { ArtistsModule } from './artists/artists.module';
       port:5432,
       username:process.env.DB_USERNAME,
       password:process.env.db_password,
-      database:'spotify_nestjs',
+      database:'spotify',
       entities:[Song,Artist,User,Playlist],
       synchronize:true
     }),

@@ -8,6 +8,7 @@ import { PayloadType } from './types/payload.type';
 import { Enable2FAType } from './types/auth-types';
 import * as speakeasy from 'speakeasy';
 import { UpdateResult } from 'typeorm';
+import { User } from 'src/users/user.entity';
 
 
 @Injectable()
@@ -84,5 +85,9 @@ export class AuthService {
 
   async disable2fa(userId:number):Promise<UpdateResult>{
     return this.userService.disable2fa(userId)
+  }
+
+  validateUserByApiKey(apikey:string):Promise<User|null>{
+    return this.userService.findByApiKey(apikey)
   }
 }
