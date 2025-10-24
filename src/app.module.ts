@@ -16,6 +16,7 @@ import { PlaylistsModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
+import { dataSourceOptions } from 'db/data-source';
 
 
 
@@ -25,16 +26,7 @@ import { ArtistsModule } from './artists/artists.module';
     ConfigModule.forRoot({
       isGlobal:true
     }),
-    TypeOrmModule.forRoot({
-      type:'postgres',
-      host:'localhost',
-      port:5432,
-      username:process.env.DB_USERNAME,
-      password:process.env.db_password,
-      database:'spotify',
-      entities:[Song,Artist,User,Playlist],
-      synchronize:true
-    }),
+    TypeOrmModule.forRoot(dataSourceOptions),
     SongsModule,
     PlaylistsModule,
     AuthModule,
