@@ -1,7 +1,6 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { JwtAuthGaurd } from './auth/jwt-guard';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
 export class AppController {
@@ -13,15 +12,11 @@ export class AppController {
   }
 
   @Get('profile')
-  @UseGuards(AuthGuard('bearer'))
+  @UseGuards(JwtAuthGaurd)
   getProfile(
     @Request()
     req
   ){
-    delete req.user.password
-    return {
-      msg: "Authenticated with apikey",
-      user: req.user,
-  };
-}
+    return req.user
+  }
 }

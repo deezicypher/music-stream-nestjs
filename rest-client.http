@@ -46,12 +46,12 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-"first_name": "Deezix",
-"last_name": "Codesx",
-"email": "deezicodesx@gmail.com",
+"first_name": "Deezi",
+"last_name": "Codes",
+"email": "deezicodes@gmail.com",
 "password": "123456"
 }
-
+### deezicodes apikey 29a6bbc3-d77f-416f-81bc-8235a73c29c3
 
 ### Login User
 POST http://localhost:3000/auth/login
@@ -64,4 +64,26 @@ Content-Type: application/json
 
 ### Get Profile
 GET http://localhost:3000/profile
+Authorization: Bearer 29a6bbc3-d77f-416f-81bc-8235a73c29c3
+
+### Get Auth Profile
+GET http://localhost:3000/auth/profile
+Authorization: Bearer 29a6bbc3-d77f-416f-81bc-8235a73c29c3
+
+
+### Enable 2FA
+POST http://localhost:3000/auth/enable-2fa
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
+
+### Disable 2fa
+GET http://localhost:3000/auth/disable-2fa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
+
+### Validate 2FA Token
+POST http://localhost:3000/auth/verify-2fa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
+Content-Type: application/json
+
+{
+"token": "522319"
+}
