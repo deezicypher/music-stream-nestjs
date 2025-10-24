@@ -9,13 +9,15 @@ import { Enable2FAType } from './types/auth-types';
 import * as speakeasy from 'speakeasy';
 import { UpdateResult } from 'typeorm';
 import { User } from 'src/users/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class AuthService {
   constructor(private userService:UsersService,
     private jwtService:JwtService,
-    private artistSevice:ArtistsService
+    private artistSevice:ArtistsService,
+    private configService:ConfigService
   ){}
   async login(loginDTO:LoginDTO):Promise<{access_token:string} | {verify2fa:string,message:string}>{
     const user = await this.userService.findOne(loginDTO)
@@ -89,5 +91,10 @@ export class AuthService {
 
   validateUserByApiKey(apikey:string):Promise<User|null>{
     return this.userService.findByApiKey(apikey)
+  }
+
+
+  getEnv(){
+    return this.configService.get<number>('port')
   }
 }
