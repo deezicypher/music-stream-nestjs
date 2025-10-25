@@ -12,7 +12,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       port: configService.get<number>('db_port'),
       username: configService.get<string>('db_username'),
       password: configService.get<string>('db_password'),
-      database: configService.get<string>('db_database'),
+      database: configService.get<string>('db_name'),
       entities: ["dist/**/*.entity.js"],
       synchronize: false,
       migrations: ["dist/db/migrations/*.js"]
@@ -25,7 +25,7 @@ export const dataSourceOptions: DataSourceOptions = {
   port: parseInt(process.env.DB_PORT || '5432', 10),
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
+  database: process.env.DB_NAME,
   entities: ['dist/**/*.entity.js'],
   synchronize: false,
   migrations: ['dist/db/migrations/*.js'],

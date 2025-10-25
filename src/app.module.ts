@@ -14,6 +14,7 @@ import { ArtistsModule } from './artists/artists.module';
 import { dataSourceOptions, typeOrmAsyncConfig } from 'db/data-source';
 import { SeedModule } from './seed/seed.module';
 import configuration from './config/configuration';
+import { validate } from 'env.validation';
 
 
 
@@ -23,7 +24,8 @@ import configuration from './config/configuration';
     ConfigModule.forRoot({
       envFilePath:['.env.development','.env.production'],
       isGlobal:true,
-      load:[configuration]
+      load:[configuration],
+      validate:validate
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     SongsModule,
