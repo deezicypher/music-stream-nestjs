@@ -21,7 +21,7 @@ class EnvironmentVariables {
     DB_PORT: number;
 
     @IsString()
-    USERNAME: string;
+    DB_USERNAME: string;
 
     @IsString()
     DB_PASSWORD: string;
@@ -36,15 +36,17 @@ class EnvironmentVariables {
 export function validate(config: Record<string, unknown>) {
 //plainInstance converts plain (literal) object to class (constructor) object.
 // Also works with arrays.
+
 const validatedConfig = plainToInstance(EnvironmentVariables, config, {
 /**
 * enableImplicitConversion will tell class-transformer that if it sees a
 primitive that is currently a string (like a boolean or a number) to assume it
 should be the primitive type instead and transform it, even though @Type(() =>
 Number) or @Type(() => Boolean) isn't used
-*/
+*/ 
 enableImplicitConversion: true,
 });
+
 /**
 * Performs sync validation of the given object.
 * Note that this method completely ignores async validations.

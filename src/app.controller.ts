@@ -17,6 +17,7 @@ export class AppController {
     @Request()
     req
   ){
+    
     return req.user
   }
 }
