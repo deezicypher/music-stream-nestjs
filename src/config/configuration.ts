@@ -1,5 +1,6 @@
 export default () => ({
 port: parseInt(process.env.PORT || '3000', 10),
+node_env: process.env.NODE_ENV,
 secret: process.env.SECRET,
 db_username:process.env.DB_USERNAME,
 db_password:process.env.DB_PASSWORD,
