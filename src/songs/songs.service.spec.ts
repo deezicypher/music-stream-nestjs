@@ -102,4 +102,17 @@ describe('SongsService', () => {
 
   expect(song).toEqual(oneSong);
   })
+
+  it('should update the song', async () => {
+    const updateDTO = {
+      title: 'New Title',
+      lyrics: 'Updated lyrics',
+    };
+      const updateSpy = jest.spyOn(songRepo, "update")
+      const  result = await service.update(1,updateDTO as UpdateSongDTO)
+
+      expect(updateSpy).toHaveBeenCalledTimes(1)
+      expect(updateSpy).toHaveBeenCalledWith(1,updateDTO)
+      expect(result).toEqual({affected:1})
+  })
 });
