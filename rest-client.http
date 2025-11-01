@@ -5,6 +5,8 @@ GET http://localhost:3000/songs
 
 ### FInd song
 GET http://localhost:3000/songs/1
+
+
 ### Create song
 POST http://localhost:3000/songs
 Content-Type: application/json
@@ -64,7 +66,7 @@ Content-Type: application/json
 
 ### Get Profile
 GET http://localhost:3000/profile
-Authorization: Bearer 29a6bbc3-d77f-416f-81bc-8235a73c29c3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAZ21haWwuY29tIiwidXNlcklkIjo1LCJpYXQiOjE3NjE2MjEzNzEsImV4cCI6MTc2MTcwNzc3MX0.sLgZgR7VuBqObN1z21nTnBKjWdmYOLWnJkDkQxc5yD8
 
 ### Get Auth Profile
 GET http://localhost:3000/auth/profile
@@ -87,3 +89,6 @@ Content-Type: application/json
 {
 "token": "522319"
 }
+
+### Test Env
+GET http://localhost:3000/auth/test
