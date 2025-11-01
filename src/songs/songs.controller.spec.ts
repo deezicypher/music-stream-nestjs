@@ -26,7 +26,7 @@ describe('SongsController', () => {
         return Promise.resolve({id:1,...createSongDTO})
       }),
 
-      update: jest.fn().mockImplementation((updateSongDTO:UpdateSongDTO) => {
+      update: jest.fn().mockImplementation((id:number,updateSongDTO:Partial<UpdateSongDTO>) => {
         return Promise.resolve({affected:1})
       }),
 
@@ -81,6 +81,17 @@ describe('SongsController', () => {
       }
       const song = await controller.create(newSongDTO)
       expect(song).toEqual({id:1,...newSongDTO})
+    })
+  })
+
+  describe('update song', () => {
+    it('should update the song', async () => {
+      const updateSongDTO:Partial<UpdateSongDTO> = {
+        title: "Not Flying"
+      }
+      const updatedResult = await controller.update(1,updateSongDTO as UpdateSongDTO)
+      expect(updatedResult).toBeDefined()
+      expect(updatedResult.affected).toBe(1)
     })
   })
 });
