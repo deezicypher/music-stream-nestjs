@@ -115,4 +115,11 @@ describe('SongsService', () => {
       expect(updateSpy).toHaveBeenCalledWith(1,updateDTO)
       expect(result).toEqual({affected:1})
   })
+  it('should delete the song', async () => {
+    const deleteSpy = jest.spyOn(songRepo, 'delete')
+    const result = await service.delete(1)
+    expect(deleteSpy).toHaveBeenCalledTimes(1)
+    expect(result.affected).toBe(1)
+    expect(deleteSpy).toHaveBeenCalledWith(1)
+  })
 });
