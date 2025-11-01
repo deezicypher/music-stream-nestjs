@@ -94,4 +94,12 @@ describe('SongsController', () => {
       expect(updatedResult.affected).toBe(1)
     })
   })
+
+  describe('delete song', () => {
+    it('should delete the song', async () => {
+      const deleteResult = await controller.delete(1)
+      expect(deleteResult).toBeDefined()
+      expect(deleteResult.affected).toBe(1)
+    })
+  })
 });
