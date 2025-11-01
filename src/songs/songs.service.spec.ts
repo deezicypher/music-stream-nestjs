@@ -17,7 +17,7 @@ describe('SongsService', () => {
 
   const oneSong = {
      title:"flying",
-        artists: "Peder Helland",
+        artists: [1],
         release_date: new Date("2025-10-12"),
         duration: durationDate,
         lyrics: "Flying .... "
@@ -26,7 +26,7 @@ describe('SongsService', () => {
   const songArray = [
     {
        title:"flying",
-        artists: "Peder Helland",
+        artists: [1],
         release_date: new Date("2025-10-12"),
         duration: durationDate,
         lyrics: "Flying .... "
@@ -87,5 +87,19 @@ describe('SongsService', () => {
     const repoSpy = jest.spyOn(songRepo,"findOneBy")
     expect(song).toEqual(oneSong)
     expect(repoSpy).toHaveBeenCalledWith({id:1})
+  })
+
+  it('should create the song', async () => {
+    const saveSpy = jest.spyOn(songRepo,'save')
+    const artistSpy = jest.spyOn(artistRepo, 'findBy')
+    const song = await service.create(oneSong)
+    expect(saveSpy).toHaveBeenCalledTimes(1)
+    expect(artistSpy).toHaveBeenCalledTimes(1)
+    expect(saveSpy).toHaveBeenCalledWith(expect.objectContaining({
+    title: 'flying',
+    lyrics: 'Flying .... ',
+  }));
+
+  expect(song).toEqual(oneSong);
   })
 });
