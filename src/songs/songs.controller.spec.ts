@@ -38,6 +38,7 @@ describe('SongsController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SongsController],
       providers:[
+        SongsService,
         {
           provide:SongsService,
           useValue: mockSongsService
