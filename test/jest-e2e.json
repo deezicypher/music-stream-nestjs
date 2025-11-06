@@ -9,7 +9,8 @@
  "moduleNameMapper": {
     "^src/(.*)$": "<rootDir>/../src/$1",
      "^db/(.*)$": "<rootDir>/../db/$1",
-     "^env\\.validation$": "<rootDir>/../env.validation.ts"
+     "^env\\.validation$": "<rootDir>/../env.validation.ts",
+      "^test-utils/(.*)$": "<rootDir>/../test-utils/$1"
    },
   "transformIgnorePatterns": [
     "node_modules/(?!uuid)"

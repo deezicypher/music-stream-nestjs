@@ -8,11 +8,14 @@ import { CreateSongDTO } from 'src/songs/dto/create-song-dto';
 import { Artist } from 'src/artists/artist.entity';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
 import { User } from 'src/users/user.entity';
-import {v4 as uuid4} from 'uuid'
-import * as bcrypt from 'bcryptjs';
+
 import { In } from 'typeorm';
 import { Playlist } from 'src/playlists/playlist.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { createUser } from 'test-utils/helpers/create-user.helper';
+import { createArtist } from 'test-utils/helpers/create-artist.helper';
+import { createSong } from 'test-utils/helpers/create-song.helper';
+import { UpdateSongDTO } from 'src/songs/dto/update-song-dto';
 
 
 
@@ -69,42 +72,9 @@ describe('Songs - /songs', () => {
     await userRepo.query('DELETE FROM "users"'); 
     });
 
-    const createUser =  async (userDTO:CreateUserDTO)=>{
-               const user = new User()
-               user.first_name = userDTO.first_name
-               user.last_name = userDTO.last_name
-               user.email = userDTO.email
-               user.apikey = uuid4()
-       
-               const salt = await bcrypt.genSalt();
-               user.password = await bcrypt.hash(userDTO.password, salt);
-               const userRepo = app.get(getRepositoryToken(User))
-               const savedUser = await userRepo.save(user);
-               const { password, ...safeUser } = savedUser;
-               return safeUser;
-    }
-    const createArtist = async (userId:number) => {
-        const artist = new Artist()
-         const userRepo = app.get(getRepositoryToken(User))
-        const user = await userRepo.findOneBy({id:userId})
-        artist.user = user!
-         const artistRepo = app.get(getRepositoryToken(Artist))
-        return artistRepo.save(artist)
-    }
-    const createSong = async (songDTO:CreateSongDTO) => {
 
-        const song = new Song()
-        song.title = songDTO.title;
-        song.duration = songDTO.duration;
-        song.lyrics = songDTO.lyrics;
-        song.release_date = songDTO.release_date;
-        const artistRepo = app.get(getRepositoryToken(Artist))
-        const artists = await artistRepo.findBy({id: In(songDTO.artists)});
-        song.artists = artists;
 
-        const songRepo = app.get(getRepositoryToken(Song));
-        return  await songRepo.save(song);
-    }
+
 
     it('/Get songs', async () => {
         const user = await createUser(
@@ -113,9 +83,9 @@ describe('Songs - /songs', () => {
             last_name: "Codes",
             email: "deezicodes@gmail.com",
             password: "123456"
-            }
+            }, app
             )
-        const artist =  await createArtist(user.id)
+        const artist =  await createArtist(user.id,app)
 
         const durationDate = new Date(0);
         durationDate.setSeconds(120);
@@ -125,10 +95,39 @@ describe('Songs - /songs', () => {
         release_date: new Date("2025-10-12"),
         duration: durationDate,
         lyrics: "Flying .... "
-        })
+        }, app)
         const results = await request(app.getHttpServer()).get('/songs')
         expect(results.statusCode).toBe(200)
         expect(results.body.items).toHaveLength(1)
         expect(results.body.items[0].title).toEqual(newSOng.title)
+    })
+
+    it('/Puts song/:id', async () => {
+        const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            },app
+            )
+        const artist =  await createArtist(user.id,app)
+
+        const durationDate = new Date(0);
+        durationDate.setSeconds(120);
+        const newSOng = await createSong({
+            title:"flying",
+        artists: [artist.id],
+        release_date: new Date("2025-10-12"),
+        duration: durationDate,
+        lyrics: "Flying .... "
+        }, app)
+
+        const updateSongDTO = {title:"Not Flying"}
+        const results = await request(app.getHttpServer())
+        .put(`/songs/${newSOng.id}`)
+        .send(updateSongDTO as UpdateSongDTO)
+        expect(results.statusCode).toBe(200)
+        expect(results.body.affected).toEqual(1)
     })
 });
