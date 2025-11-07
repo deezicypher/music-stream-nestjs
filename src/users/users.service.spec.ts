@@ -47,9 +47,31 @@ describe('UsersService', () => {
 
   it('should call repo save when saving a user', async () => {
     const dto = { first_name: 'John', last_name: 'Doe', email: 'test@test.com', password: '123456' };
-    const results = await service.create(dto)
-    console.log(results)
+    await service.create(dto)
     expect(userRepo.save).toHaveBeenCalled()
-    
+  });
+
+  it('should find the user on login', async () => {
+    await service.findOne({email:"deezicodes@gmail.com", password:"root12"})
+    expect(userRepo.findOneBy).toHaveBeenCalled()
+  })
+    it('should find the user by id', async () => {
+    await service.findById(1)
+    expect(userRepo.findOneBy).toHaveBeenCalled()
+  })
+  it('should update secret key', async () => {
+    const result = await service.updateSecretKey(1,"e8a76ff2-87c3-4e69-bc7c-6f8cea110119")
+    expect(userRepo.update).toHaveBeenCalled()
+    expect(result).toEqual({affected:1})
+  })
+    it('should disable 2fa', async () => {
+    const result = await service.disable2fa(1)
+    expect(userRepo.update).toHaveBeenCalled()
+    expect(result).toEqual({affected:1})
+  })
+      it('should disable 2fa', async () => {
+    const result = await service.findByApiKey("e8a76ff2-87c3-4e69-bc7c-6f8cea110119")
+    expect(userRepo.findOneBy).toHaveBeenCalled()
+  
   })
 });

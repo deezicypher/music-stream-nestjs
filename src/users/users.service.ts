@@ -42,7 +42,7 @@ export class UsersService {
         return this.userRepo.findOneBy({id})
     }
 
-    updateSecretKey(userId,secretKey):Promise<UpdateResult>{
+    updateSecretKey(userId:number,secretKey:string):Promise<UpdateResult>{
         return this.userRepo.update({id:userId},{
             twoFASecret:secretKey,
             enable2FA:true
