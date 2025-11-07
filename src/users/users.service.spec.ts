@@ -44,4 +44,12 @@ describe('UsersService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('should call repo save when saving a user', async () => {
+    const dto = { first_name: 'John', last_name: 'Doe', email: 'test@test.com', password: '123456' };
+    const results = await service.create(dto)
+    console.log(results)
+    expect(userRepo.save).toHaveBeenCalled()
+    
+  })
 });
