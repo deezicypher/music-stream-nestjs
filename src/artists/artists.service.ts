@@ -12,7 +12,9 @@ export class ArtistsService {
     constructor(
           @InjectRepository(Artist)
         private artistRepo: Repository<Artist>,
+        @InjectRepository(User)
         private userRepo: Repository<User>,
+        @InjectRepository(Song)
         private songRepo: Repository<Song>  
         ){}
 

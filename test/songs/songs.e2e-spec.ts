@@ -43,11 +43,7 @@ describe('Songs - /songs', () => {
         entities: [Song,Artist,User,Playlist],
         dropSchema: true,
     })}),
-        TypeOrmModule.forFeature([Song, Artist, User, Playlist]),
-        JwtModule.register({
-      secret: process.env.SECRET || 'test_secret',
-      signOptions: { expiresIn: '1h' },
-    }),
+        TypeOrmModule.forFeature([ Artist, User, Playlist]),
         SongsModule
       ],
     })
