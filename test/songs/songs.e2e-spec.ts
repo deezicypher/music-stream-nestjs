@@ -52,7 +52,8 @@ describe('Songs - /songs', () => {
       ],
     })
     .overrideGuard(JwtArtistGuard)
-    .useClass(MockAuthGuard)
+    .useValue({canActivate : () => true})
+    //.useClass(MockAuthGuard)
     .compile();
 
 
