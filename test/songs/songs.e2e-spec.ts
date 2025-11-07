@@ -12,10 +12,13 @@ import { User } from 'src/users/user.entity';
 import { In } from 'typeorm';
 import { Playlist } from 'src/playlists/playlist.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { createUser } from 'test-utils/helpers/create-user.helper';
-import { createArtist } from 'test-utils/helpers/create-artist.helper';
-import { createSong } from 'test-utils/helpers/create-song.helper';
+import { createUser } from 'test/helpers/create-user.helper';
+import { createArtist } from 'test/helpers/create-artist.helper';
+import { createSong } from 'test/helpers/create-song.helper';
 import { UpdateSongDTO } from 'src/songs/dto/update-song-dto';
+import { JwtArtistGuard } from 'src/auth/jwt-artist.guard';
+import { MockAuthGuard } from 'test/helpers/mock-auth.guard';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 
 
@@ -41,9 +44,17 @@ describe('Songs - /songs', () => {
         dropSchema: true,
     })}),
         TypeOrmModule.forFeature([Song, Artist, User, Playlist]),
+        JwtModule.register({
+      secret: process.env.SECRET || 'test_secret',
+      signOptions: { expiresIn: '1h' },
+    }),
         SongsModule
       ],
-    }).compile();
+    })
+    .overrideGuard(JwtArtistGuard)
+    .useClass(MockAuthGuard)
+    .compile();
+
 
     app = moduleFixture.createNestApplication();
     await app.init();
@@ -129,5 +140,34 @@ describe('Songs - /songs', () => {
         .send(updateSongDTO as UpdateSongDTO)
         expect(results.statusCode).toBe(200)
         expect(results.body.affected).toEqual(1)
+    })
+
+    it('/Post songs', async () => {
+        const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            },app
+            )
+        const artist =  await createArtist(user.id,app)
+
+        const createSongDTO = {
+            title:"flying",
+        artists: [artist.id],
+        release_date: new Date("2025-10-12"),
+        duration: "00:02:00",
+        lyrics: "Flying .... "
+        }
+        
+  
+        const results = await request(app.getHttpServer())
+        .post('/songs')
+        .send(createSongDTO)
+
+        expect(results.status).toBe(201)
+        expect(results.body.title).toBe('flying');
+
     })
 });
