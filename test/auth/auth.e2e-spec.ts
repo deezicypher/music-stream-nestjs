@@ -10,6 +10,7 @@ import { Playlist } from "src/playlists/playlist.entity";
 import { Song } from "src/songs/song.entity";
 import { Artist } from "src/artists/artist.entity";
 import { AuthModule } from "src/auth/auth.module";
+import { JwtModule } from "@nestjs/jwt";
 
 
 describe('Auth - /auth', () => {
@@ -32,11 +33,22 @@ describe('Auth - /auth', () => {
             entities: [User,Playlist,Song,Artist],
             dropSchema: true,
         })}),
-        
+        JwtModule.register({
+        secret: 'test-secret',
+        signOptions: { expiresIn: '1d' }
+      }),
           AuthModule,
             UsersModule
           ],
         })
+          .overrideProvider(ConfigService)
+          .useValue({
+            get: (key: string) => {
+              if (key === 'secret') return 'test-secret';
+              // fallback to env variable for DB_TESTURL
+              return process.env[key] || null;
+            },
+          })
         .compile();
     
     
@@ -65,5 +77,22 @@ describe('Auth - /auth', () => {
         expect(result.status).toBe(201)
         expect(result.body.first_name).toBe(createUserDTO.first_name)
         
+     })
+
+     it('/logins the user', async () => {
+          const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            }, app
+            )
+          const loginDTO = {email:user.email, password:"123456"}
+          const result = await request(app.getHttpServer())
+          .post('/auth/login')
+          .send(loginDTO)
+        
+          expect(result.status).toBe(201)
      })
 })
