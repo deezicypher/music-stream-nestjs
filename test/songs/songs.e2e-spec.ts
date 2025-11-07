@@ -171,4 +171,31 @@ describe('Songs - /songs', () => {
         expect(results.body.title).toBe('flying');
 
     })
+
+    it('/Delete song', async () => {
+        const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            },app
+            )
+        const artist =  await createArtist(user.id,app)
+
+       const durationDate = new Date(0);
+        durationDate.setSeconds(120);
+        const newSong = await createSong({
+            title:"flying",
+        artists: [artist.id],
+        release_date: new Date("2025-10-12"),
+        duration: durationDate,
+        lyrics: "Flying .... "
+        }, app)
+
+        const result = await request(app.getHttpServer())
+        .delete(`/songs/${newSong.id}`)
+        expect(result.status).toBe(200)
+        expect(result.body.affected).toBe(1)
+    })
 });
