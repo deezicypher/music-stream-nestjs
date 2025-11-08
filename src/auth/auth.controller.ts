@@ -45,7 +45,7 @@ export class AuthController {
     }
 
     @Post('enable-2fa')
-    @UseGuards(JwtAuthGaurd)
+    @UseGuards(JwtAuthGaurd) 
     enable2fa(
         @Request()
         req

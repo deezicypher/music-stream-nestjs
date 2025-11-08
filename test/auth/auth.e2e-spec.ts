@@ -11,6 +11,8 @@ import { Song } from "src/songs/song.entity";
 import { Artist } from "src/artists/artist.entity";
 import { AuthModule } from "src/auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
+import { JwtArtistGuard } from "src/auth/jwt-artist.guard";
+import { JwtAuthGaurd } from "src/auth/jwt-guard";
 
 
 describe('Auth - /auth', () => {
@@ -49,6 +51,12 @@ describe('Auth - /auth', () => {
               return process.env[key] || null;
             },
           })
+          .overrideGuard(JwtAuthGaurd)
+          .useValue({canActivate : context => {
+            const req = context.switchToHttp().getRequest();
+            req.user = { userId: 1, email: 'mock@user.com' };
+        return true;
+          }})
         .compile();
     
     
@@ -94,5 +102,28 @@ describe('Auth - /auth', () => {
           .send(loginDTO)
         
           expect(result.status).toBe(201)
+          expect(result.body.access_token).toBeDefined()
+     })
+
+     it('enables 2fa', async () => {
+            const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            }, app
+            )
+            const loginDTO = {email:user.email, password:"123456"}
+           const userLogin = await request(app.getHttpServer())
+          .post('/auth/login')
+          .send(loginDTO)
+            const result = await request(app.getHttpServer())
+            .post('/auth/enable-2fa')
+            .set('Authorization', `Bearer ${userLogin.body.access_token}`)
+            
+          
+            expect(result.status).toBe(201)
+            expect(result.body.secret).toBeDefined()
      })
 })
