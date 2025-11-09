@@ -145,9 +145,11 @@ describe('Auth - /auth', () => {
           .set('Authorization', `Bearer ${userLogin.body.access_token}`)
             
           const result = await request(app.getHttpServer())
-          .post('/auth/disable-2fa')
+          .get('/auth/disable-2fa')
           .set('Authorization', `Bearer ${userLogin.body.access_token}`)
 
-          expect(result.status).toBe(201)
+          expect(result.status).toBe(200)
+          expect(result.body.affected).toBe(1)
+       
      })
 })
