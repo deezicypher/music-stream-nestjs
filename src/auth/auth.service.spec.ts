@@ -6,7 +6,7 @@ import { ArtistsService } from 'src/artists/artists.service';
 import * as bcrypt from 'bcryptjs';
 import * as speakeasy from 'speakeasy';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 
 
 describe('AuthService', () => {
@@ -91,4 +91,29 @@ describe('AuthService', () => {
       })
     })
   })
+
+  describe('enable 2FA', async () => {
+      it('should generate and save 2FA secret if not enabled', async() => {
+        mockUser.enable2FA =false
+        const spyGenerate = jest.spyOn(speakeasy, 'generateSecret').mockReturnValue({ base32: 'mock-secret' } as any);
+        const result =  await service.enable2FA(mockUser.id)
+        expect(result).toEqual({secret:'mock-secret'})
+        expect(mockUserService).toHaveBeenCalledWith(mockUser.id,'mock-secret')
+        spyGenerate.mockRestore()
+
+      })
+
+      it('should return existing secret if 2fA is aready enabled', async () => {
+        (mockUser as any).enable2FA = true;
+      (mockUser as any).twoFASecret = 'existing-secret';
+      const result = await service.enable2FA(mockUser.id);
+      expect(result).toEqual({ secret: 'existing-secret' });
+      })
+
+      it('should throw NotFoundException if user not found', async () => {
+      (mockUserService.findById as jest.Mock).mockResolvedValueOnce(null);
+      await expect(service.enable2FA(999)).rejects.toThrow(NotFoundException);
+    });
+  })
+
 });
