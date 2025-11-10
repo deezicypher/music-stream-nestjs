@@ -38,7 +38,6 @@ describe('SongsController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SongsController],
       providers:[
-        SongsService,
         {
           provide:SongsService,
           useValue: mockSongsService
@@ -82,6 +81,7 @@ describe('SongsController', () => {
       }
       const song = await controller.create(newSongDTO)
       expect(song).toEqual({id:1,...newSongDTO})
+      expect(mockSongsService.create).toHaveBeenCalledWith(newSongDTO)
     })
   })
 
