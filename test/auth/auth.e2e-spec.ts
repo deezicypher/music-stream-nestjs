@@ -126,6 +126,30 @@ describe('Auth - /auth', () => {
             expect(result.status).toBe(201)
             expect(result.body.secret).toBeDefined()
      })
+     it('returns a verify2fa url', async () => {
+                  const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            }, app
+            )
+            const loginDTO = {email:user.email, password:"123456"}
+           const userLogin = await request(app.getHttpServer())
+          .post('/auth/login')
+          .send(loginDTO)
+          await request(app.getHttpServer())
+          .post('/auth/enable-2fa')
+          .set('Authorization', `Bearer ${userLogin.body.access_token}`)
+
+          const result = await request(app.getHttpServer())
+          .post('/auth/login')
+          .send(loginDTO)
+          expect(result.body.verify2fa).toBe('http://localhost:3000/auth/validate-2fa')
+          
+            
+     })
 
      it('disable 2fa', async () => {
              const user = await createUser(
