@@ -90,12 +90,11 @@ describe('SongsService', () => {
   })
 
   it('should create the song', async () => {
-    const saveSpy = jest.spyOn(songRepo,'save')
-    const artistSpy = jest.spyOn(artistRepo, 'findBy')
+
     const song = await service.create(oneSong)
-    expect(saveSpy).toHaveBeenCalledTimes(1)
-    expect(artistSpy).toHaveBeenCalledTimes(1)
-    expect(saveSpy).toHaveBeenCalledWith(expect.objectContaining({
+    expect(songRepo.save).toHaveBeenCalledTimes(1)
+    expect(artistRepo.findBy).toHaveBeenCalledTimes(1)
+    expect(songRepo.save).toHaveBeenCalledWith(expect.objectContaining({
     title: 'flying',
     lyrics: 'Flying .... ',
   }));
@@ -108,18 +107,18 @@ describe('SongsService', () => {
       title: 'New Title',
       lyrics: 'Updated lyrics',
     };
-      const updateSpy = jest.spyOn(songRepo, "update")
+
       const  result = await service.update(1,updateDTO as UpdateSongDTO)
 
-      expect(updateSpy).toHaveBeenCalledTimes(1)
-      expect(updateSpy).toHaveBeenCalledWith(1,updateDTO)
+      expect(songRepo.update).toHaveBeenCalledTimes(1)
+      expect(songRepo.update).toHaveBeenCalledWith(1,updateDTO)
       expect(result).toEqual({affected:1})
   })
   it('should delete the song', async () => {
-    const deleteSpy = jest.spyOn(songRepo, 'delete')
+   
     const result = await service.delete(1)
-    expect(deleteSpy).toHaveBeenCalledTimes(1)
+    expect(songRepo.delete).toHaveBeenCalledTimes(1)
     expect(result.affected).toBe(1)
-    expect(deleteSpy).toHaveBeenCalledWith(1)
+    expect(songRepo.delete).toHaveBeenCalledWith(1)
   })
 });
