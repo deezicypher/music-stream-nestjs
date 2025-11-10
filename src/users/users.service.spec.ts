@@ -72,6 +72,6 @@ describe('UsersService', () => {
       it('should findby api key', async () => {
     const result = await service.findByApiKey("e8a76ff2-87c3-4e69-bc7c-6f8cea110119")
     expect(userRepo.findOneBy).toHaveBeenCalled()
-  
+    expect(result).toBe(oneUser)
   })
 });
