@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
 import { LoginDTO } from './dto/login-dto';
+import { JwtAuthGaurd } from './jwt-guard';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -31,7 +32,7 @@ describe('AuthController', () => {
           useValue:mockingUserService
          }
       ]
-    }).compile();
+    }) .compile();
 
     controller = module.get<AuthController>(AuthController);
   });
@@ -60,5 +61,10 @@ describe('AuthController', () => {
     const result = await controller.login(loginDTO) as { access_token: string };
     expect(mockingAuthService.login).toHaveBeenCalledWith(loginDTO)
     expect(result.access_token).toBe('mock+token')
+  })
+  it('enable 2fa', async () => {
+    const result = await controller.enable2fa({ user: { userId: 1 } } as any);
+    expect(mockingAuthService.enable2FA).toHaveBeenCalledWith(1)
+    expect(result.secret).toBe('mock_secret')
   })
 });
