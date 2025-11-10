@@ -67,4 +67,10 @@ describe('AuthController', () => {
     expect(mockingAuthService.enable2FA).toHaveBeenCalledWith(1)
     expect(result.secret).toBe('mock_secret')
   })
+
+  it('disables 2FA', async () => {
+    const result = await controller.disable2fa({user:{userId:1}})
+    expect(mockingAuthService.disable2fa).toHaveBeenCalledWith(1)
+    expect(result.affected).toBe(1)
+  })
 });
