@@ -18,7 +18,7 @@ export class AuthService {
     private jwtService:JwtService,
     private artistSevice:ArtistsService,
   ){}
-  async login(loginDTO:LoginDTO):Promise<{access_token:string} | {verify2fa:string,message:string}>{
+  async login(loginDTO:LoginDTO):Promise<{access_token:string} | {verify2fa:string,message:string,userId:number}>{
     const user = await this.userService.findOne(loginDTO)
     const passwordMatched = await bcrypt.compare(loginDTO.password,user.password)
 
@@ -28,7 +28,8 @@ export class AuthService {
         if(user.enable2FA && user.twoFASecret){
           return {
             verify2fa:'http://localhost:3000/auth/validate-2fa',
-            message:'Please send the one-time password/token from your Google Authenticator App'
+            message:'Please send the one-time password/token from your Google Authenticator App',
+            userId:user.id
           }
         }
         const artist = await this.artistSevice.findArtist(user.id)
@@ -61,7 +62,7 @@ export class AuthService {
     return {secret:user.twoFASecret}
   }
 
-  async verify2fa(userId:number,token:string):Promise<{verified:boolean}>{
+  async verify2fa(userId:number,token:string):Promise<{access_token:string} | {verified:boolean}>{
     const user = await this.userService.findById(userId)
     if(!user){
       throw new NotFoundException(`User with ${userId} not found`)
@@ -69,15 +70,20 @@ export class AuthService {
     if (!user.twoFASecret) {
       throw new BadRequestException('2FA is not enabled for this user');
     }
+   
     try {
       const verified = speakeasy.totp.verify({
         secret:user.twoFASecret,
         token:token,
         encoding: 'base32'
       })
-   
+    const payload: PayloadType = {email:user.email,userId:user.id}
+    const artist = await this.artistSevice.findArtist(user.id);
+    if (artist) {
+      payload.artistId = artist.id;
+    }
       if(verified){
-        return {verified:true}
+        return {access_token: this.jwtService.sign(payload)}
       }else{
         return {verified: false}
       }
