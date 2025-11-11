@@ -158,6 +158,12 @@ describe('AuthService', () => {
   });
 
 
-
+  describe('disable 2fa', () => {
+    it('should call userService.disable2fa', async () => {
+      const result = await service.disable2fa(mockUser.id)
+      expect(result.affected).toBe(1)
+      expect(mockUserService.disable2fa).toHaveBeenCalledWith(mockUser.id)
+    })
+  })
 
 });
