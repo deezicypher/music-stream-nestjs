@@ -31,4 +31,16 @@ export class PlaylistsService {
 
         return this.playlistRepo.save(playlist)
     }
+
+    async findAll():Promise<Playlist[]>{
+        return this.playlistRepo.find()
+    }
+
+    async findOne(id:number):Promise<Playlist | null>{
+        return this.playlistRepo.findOneBy({id})
+    }
+
+    async findUserPlaylist(id:number):Promise<Playlist[]>{
+        return this.playlistRepo.findBy({user:{id}})
+    }
 }
