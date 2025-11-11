@@ -87,9 +87,5 @@ export class AuthController {
         }
     }
 
-    @Get('test')
-    getEnv(){
-        return this.authService.getEnv()
-    }
 
 }

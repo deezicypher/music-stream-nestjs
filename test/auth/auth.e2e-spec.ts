@@ -1,4 +1,4 @@
-import { INestApplication } from "@nestjs/common";
+import { INestApplication, UnauthorizedException } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
@@ -86,8 +86,9 @@ describe('Auth - /auth', () => {
         expect(result.body.first_name).toBe(createUserDTO.first_name)
         
      })
+     describe('login', () => {
 
-     it('/logins the user', async () => {
+        it('/logins the user', async () => {
           const user = await createUser(
             {
             first_name: "Deezi",
@@ -104,6 +105,26 @@ describe('Auth - /auth', () => {
           expect(result.status).toBe(201)
           expect(result.body.access_token).toBeDefined()
      })
+
+     it('should throw unauthorized exception if password do not match',async() => {
+       const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            }, app
+            )
+          const loginDTO = {email:user.email, password:"12345"}
+           const result = await request(app.getHttpServer())
+          .post('/auth/login')
+          .send(loginDTO)
+          expect(result.status).toBe(401)
+          expect(result.body.error).toBe("Unauthorized")
+     })
+
+     })
+
 
      it('enables 2fa', async () => {
             const user = await createUser(
@@ -147,7 +168,7 @@ describe('Auth - /auth', () => {
           .post('/auth/login')
           .send(loginDTO)
           expect(result.body.verify2fa).toBe('http://localhost:3000/auth/validate-2fa')
-          
+
             
      })
 
