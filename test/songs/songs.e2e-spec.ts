@@ -23,7 +23,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 
 
 
-describe('Songs - /songs', () => {
+describe('SongsController (e2e)', () => {
   let app: INestApplication;
 
   beforeEach(async () => {

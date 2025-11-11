@@ -1,0 +1,117 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import request from 'supertest';
+import { App } from 'supertest/types';
+import { PlaylistsModule } from 'src/playlists/playlists.module';
+import { JwtAuthGaurd } from 'src/auth/jwt-guard';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { Song } from 'src/songs/song.entity';
+import { Playlist } from 'src/playlists/playlist.entity';
+import { User } from 'src/users/user.entity';
+import { createUser } from 'test/helpers/create-user.helper';
+import { createArtist } from 'test/helpers/create-artist.helper';
+import { createSong } from 'test/helpers/create-song.helper';
+import { Artist } from 'src/artists/artist.entity';
+import { ArtistsModule } from 'src/artists/artists.module';
+
+
+describe('PlaylistController (e2e)', () => {
+  let app: INestApplication<App>;
+
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [PlaylistsModule // playist module already imports user,song
+        ,ArtistsModule,
+        ConfigModule.forRoot({
+            envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
+            isGlobal:true
+        }),
+        TypeOrmModule.forRootAsync({
+            imports:[ConfigModule],
+            inject: [ConfigService],
+            useFactory: async(configService:ConfigService) => ({
+            type: 'postgres',
+            url: configService.get<string>('DB_TESTURL'),
+            synchronize: true,
+            entities: [User,Playlist,Song,Artist],
+            dropSchema: true,
+            })
+        })
+      ],  
+    })
+    .overrideProvider(ConfigService)
+    .useValue({
+        get: (key: string) => {
+            if (key === 'secret') return 'test-secret';
+            // fallback to env variable for DB_TESTURL
+            return process.env[key] || null;
+        },
+        })
+    .overrideGuard(JwtAuthGaurd)
+    .useValue({canActivate : context => {
+                const req = context.switchToHttp().getRequest();
+                req.user = { userId: 1, email: 'mock@user.com' };
+            return true;
+              }})
+    .compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
+  afterEach(async() => {
+    const songRepository = app.get(getRepositoryToken(Song));
+    const artistRepo = app.get(getRepositoryToken(Artist));
+    const userRepo = app.get(getRepositoryToken(User));
+    const playlistRepo = app.get(getRepositoryToken(Playlist));
+    
+    await songRepository.query('DELETE FROM songs_artists');
+    await songRepository.query('DELETE FROM "Songs"');
+    await playlistRepo.query('DELETE FROM "playlists"');
+     await artistRepo.query('DELETE FROM artists');
+    await userRepo.query('DELETE FROM "users"'); 
+  })
+ 
+  it('/Posts playlists', async () => {
+    const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            }, app
+            )
+    const artist =  await createArtist(user.id,app)
+
+    const durationDate = new Date(0);
+    durationDate.setSeconds(120);
+    const newSong = await createSong({
+        title:"flying",
+    artists: [artist.id],
+    release_date: new Date("2025-10-12"),
+    duration: durationDate,
+    lyrics: "Flying .... "
+    }, app)
+
+        const user2 = await createUser(
+            {
+            first_name: "mockuser",
+            last_name: "test",
+            email: "mockuser@gmail.com",
+            password: "123456"
+            }, app
+            )
+
+    const result = await request(app.getHttpServer())
+      .post('/playlists')
+      .send({
+          name: "life is good",
+          songs:[newSong.id],
+            user: user2.id
+      })
+      .expect(201)
+      
+      expect(result.body.name).toBe("life is good")
+  });
+});

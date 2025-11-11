@@ -15,7 +15,7 @@ import { JwtArtistGuard } from "src/auth/jwt-artist.guard";
 import { JwtAuthGaurd } from "src/auth/jwt-guard";
 
 
-describe('Auth - /auth', () => {
+describe('AuthController (e2e)', () => {
       let app: INestApplication;
     
       beforeEach(async () => {
@@ -64,8 +64,7 @@ describe('Auth - /auth', () => {
         await app.init();
       });
         afterEach(async () => {
-          // Fetch all the entities
-
+        
           const userRepo = app.get(getRepositoryToken(User));
           await userRepo.query('DELETE FROM "users"'); 
 
