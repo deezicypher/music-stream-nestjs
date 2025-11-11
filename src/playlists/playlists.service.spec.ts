@@ -19,6 +19,12 @@ describe('PlaylistsService', () => {
         songs: [1,2],
         user: 1
        }
+             const playlistArray = [{
+        id:1,
+        name: "Dancing",
+        songs: [1,2],
+        user: 1
+       }]
          const durationDate = new Date(0);
   durationDate.setSeconds(120);
          const oneSong = {
@@ -47,7 +53,10 @@ describe('PlaylistsService', () => {
        }
 
        const mockPlaylistRepo = {
-        save: jest.fn().mockResolvedValue(playlist)
+        save: jest.fn().mockResolvedValue(playlist),
+        find: jest.fn().mockResolvedValue(playlistArray),
+        findBy: jest.fn().mockResolvedValue(playlistArray),
+        findOneBy: jest.fn().mockResolvedValue(playlist)
        }
 
   beforeEach(async () => {
@@ -89,5 +98,23 @@ describe('PlaylistsService', () => {
   it('should throw NotfoundExpection if user is not found', async () => {
     (userRepo.findOneBy as jest.Mock).mockResolvedValueOnce(null);
     await expect(service.create(playlist)).rejects.toThrow('User not found');
+  })
+
+  it('find all playlists', async () => {
+    const result = await service.findAll()
+    expect(playlistRepo.find).toHaveBeenCalled()
+    expect(result).toEqual(playlistArray)
+  })
+
+  it('finds one playlist', async () => {
+    const result = await service.findOne(1)
+    expect(playlistRepo.findOneBy).toHaveBeenCalledWith({id:1})
+    expect(result).toEqual(playlist)
+  })
+
+  it('finds user playlists', async () => {
+    const result = await service.findUserPlaylist(1)
+    expect(playlistRepo.findBy).toHaveBeenCalledWith({user:{id:1}})
+    expect(result).toEqual(playlistArray)
   })
 });
