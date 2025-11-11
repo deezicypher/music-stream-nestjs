@@ -1,12 +1,25 @@
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
+  hash: jest.fn(),
+}));
+jest.mock('speakeasy', () => ({
+  generateSecret: jest.fn(),
+  totp: {
+    verify: jest.fn(),
+  },
+}));
+import * as bcrypt from 'bcryptjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/user.entity';
 import { ArtistsService } from 'src/artists/artists.service';
-import * as bcrypt from 'bcryptjs';
+
 import * as speakeasy from 'speakeasy';
 import { JwtService } from '@nestjs/jwt';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+
+
 
 
 describe('AuthService', () => {
@@ -14,6 +27,8 @@ describe('AuthService', () => {
   let mockUserService: Partial<UsersService>;
   let mockArtistService: Partial<ArtistsService>;
   let mockJWTService: Partial<JwtService>;
+
+
 
   const mockUser: User = {
     id:1,
@@ -26,9 +41,13 @@ describe('AuthService', () => {
   } as any;
 
   beforeEach(async () => {
+    mockUser.enable2FA = false;
+    mockUser.twoFASecret = null;
+    
     mockUserService = {
       findOne: jest.fn().mockResolvedValue(mockUser),
       findById: jest.fn().mockResolvedValue(mockUser),
+      updateSecretKey: jest.fn().mockResolvedValue(mockUser),
       disable2fa: jest.fn().mockResolvedValue({affected:1}),
       findByApiKey: jest.fn().mockResolvedValue(mockUser)
     }
@@ -67,20 +86,20 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should return access_token if password matches and 2FA disabled', async () => {
-       jest.spyOn(bcrypt as any, 'compare').mockResolvedValue(true);
+         (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       const result = await service.login({email: "deezicodes@gmail.com",password: "123456"})
       expect(result).toEqual({ access_token: 'mock-jwt-token' })
       expect(mockJWTService.sign).toHaveBeenCalled()
     })
 
     it('should throw unauthorized exception if password do not match', async () => {
-      jest.spyOn(bcrypt as any, 'compare').mockResolvedValue(false)
+        (bcrypt.compare as jest.Mock).mockResolvedValue(false);
       await expect(service.login({email: "deezicodes@gmail.com",password: "123456"}))
       .rejects.toThrow(UnauthorizedException)
     })
     
     it('should return verify2FA object if 2FA is enabled', async () => {
-      jest.spyOn(bcrypt as any, 'compare').mockResolvedValue(true)
+        (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       mockUser.enable2FA = true
       mockUser.twoFASecret = 'secret'
       const result = await service.login({email:mockUser.email,password:'pass'})
@@ -92,15 +111,15 @@ describe('AuthService', () => {
     })
   })
 
-  describe('enable 2FA', async () => {
-      it('should generate and save 2FA secret if not enabled', async() => {
-        mockUser.enable2FA =false
-        const spyGenerate = jest.spyOn(speakeasy, 'generateSecret').mockReturnValue({ base32: 'mock-secret' } as any);
-        const result =  await service.enable2FA(mockUser.id)
-        expect(result).toEqual({secret:'mock-secret'})
-        expect(mockUserService).toHaveBeenCalledWith(mockUser.id,'mock-secret')
-        spyGenerate.mockRestore()
+  describe('enable 2FA',() => {
 
+      it('should generate and save 2FA secret if not enabled', async() => {
+      const spyGenerate = jest.spyOn(speakeasy, 'generateSecret').mockReturnValue({ base32: 'mock-secret' } as any);
+      const result = await service.enable2FA(mockUser.id);
+   
+      expect(result).toEqual({ secret: 'mock-secret' });
+      expect(mockUserService.updateSecretKey).toHaveBeenCalledWith(mockUser.id, 'mock-secret');
+      spyGenerate.mockRestore()
       })
 
       it('should return existing secret if 2fA is aready enabled', async () => {
@@ -114,6 +133,31 @@ describe('AuthService', () => {
       (mockUserService.findById as jest.Mock).mockResolvedValueOnce(null);
       await expect(service.enable2FA(999)).rejects.toThrow(NotFoundException);
     });
+      
   })
+
+  describe('verify2fa', () => {
+    it('should return verified true if token is valid', async () => {
+      (mockUser as any).twoFASecret = 'mock-secret';
+      jest.spyOn(speakeasy.totp, 'verify').mockReturnValue(true as any);
+      const result = await service.verify2fa(mockUser.id, '123456');
+      expect(result).toEqual({ verified: true });
+    });
+
+    it('should return verified false if token invalid', async () => {
+      (mockUser as any).twoFASecret = 'mock-secret';
+      jest.spyOn(speakeasy.totp, 'verify').mockReturnValue(false as any);
+      const result = await service.verify2fa(mockUser.id, '000000');
+      expect(result).toEqual({ verified: false });
+    });
+
+    it('should throw BadRequestException if 2FA not enabled', async () => {
+      (mockUser as any).twoFASecret = null;
+      await expect(service.verify2fa(mockUser.id, '123456')).rejects.toThrow(BadRequestException);
+    });
+  });
+
+
+
 
 });

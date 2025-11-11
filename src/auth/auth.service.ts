@@ -17,7 +17,6 @@ export class AuthService {
   constructor(private userService:UsersService,
     private jwtService:JwtService,
     private artistSevice:ArtistsService,
-    private configService:ConfigService
   ){}
   async login(loginDTO:LoginDTO):Promise<{access_token:string} | {verify2fa:string,message:string}>{
     const user = await this.userService.findOne(loginDTO)
@@ -56,7 +55,9 @@ export class AuthService {
     }
     const secret = speakeasy.generateSecret()
     user.twoFASecret = secret.base32
-    await this.userService.updateSecretKey(user.id, user.twoFASecret)
+    
+    await this.userService.updateSecretKey(user.id, user.twoFASecret);
+
     return {secret:user.twoFASecret}
   }
 
@@ -94,7 +95,5 @@ export class AuthService {
   }
 
 
-  getEnv(){
-    return this.configService.get<number>('port')
-  }
+
 }
