@@ -10,7 +10,7 @@ GET http://localhost:3000/songs/1
 ### Create song
 POST http://localhost:3000/songs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkxleGk1NUB5YWhvby5jb20iLCJ1c2VySWQiOjIsImFydGlzdElkIjoxLCJpYXQiOjE3NjI4NjA0NjIsImV4cCI6MTc2Mjk0Njg2Mn0.G9s5-GYenE44UR1NPeZni4V4Ad9h93c2_DmHkzFQcTU
 
 {   "title":"Mavin's room",
     "artists":[1],
@@ -36,11 +36,12 @@ DELETE http://localhost:3000/songs/2
 ### create palylist
 POST  http://localhost:3000/playlists
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlZXppY29kZXNAZ21haWwuY29tIiwidXNlcklkIjo2LCJpYXQiOjE3NjI4NjA1MjQsImV4cCI6MTc2Mjk0NjkyNH0.7zqlqqCX4NFU2ECd3R3-KuQPzOCWR0lL_OWIEqen_bk
 
 {
   "name": "life is good",
-  "songs":[3],
-  "user":3
+  "songs":[1],
+  "user":900
 }
 
 ### Signup User
@@ -75,7 +76,7 @@ Authorization: Bearer 29a6bbc3-d77f-416f-81bc-8235a73c29c3
 
 ### Enable 2FA
 POST http://localhost:3000/auth/enable-2fa
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlZXppY29kZXNAZ21haWwuY29tIiwidXNlcklkIjo2LCJpYXQiOjE3NjI0OTYyNjYsImV4cCI6MTc2MjU4MjY2Nn0.oF-5ZI9VED0xfhXxLbcva-YAAj1xozmrDtt3VCtdl_E
 
 ### Disable 2fa
 GET http://localhost:3000/auth/disable-2fa
@@ -83,11 +84,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ
 
 ### Validate 2FA Token
 POST http://localhost:3000/auth/verify-2fa
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRyYWtlZ3JhaGFtQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiYXJ0aXN0SWQiOjEsImlhdCI6MTc2MTE4MTk4OSwiZXhwIjoxNzYxMjY4Mzg5fQ.8igfHTG1YmmCnsLtf0R4hU2qCQ2o5am3KnyquJkXimg
 Content-Type: application/json
 
 {
-"token": "522319"
+"userId":"6",
+"token": "331209"
 }
 
 ### Test Env

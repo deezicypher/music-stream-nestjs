@@ -128,38 +128,21 @@ describe('PlaylistController (e2e)', () => {
             password: "123456"
             }, app
             )
-    const artist =  await createArtist(user.id,app)
 
-    const durationDate = new Date(0);
-    durationDate.setSeconds(120);
-    const newSong = await createSong({
-        title:"flying",
-    artists: [artist.id],
-    release_date: new Date("2025-10-12"),
-    duration: durationDate,
-    lyrics: "Flying .... "
-    }, app)
 
-        const user2 = await createUser(
-            {
-            first_name: "mockuser",
-            last_name: "test",
-            email: "mockuser@gmail.com",
-            password: "123456"
-            }, app
-            )
+ 
 
     const result = await request(app.getHttpServer())
       .post('/playlists')
       .send({
           name: "life is good",
           songs:[999],
-            user: user2.id
+            user: user.id
       })
       .expect(404)
  
   })
-  it('fails to create playlist, if song is not found', async () => {
+  it('fails to create playlist, if user is not found', async () => {
     const user = await createUser(
             {
             first_name: "Deezi",
@@ -180,14 +163,7 @@ describe('PlaylistController (e2e)', () => {
     lyrics: "Flying .... "
     }, app)
 
-        const user2 = await createUser(
-            {
-            first_name: "mockuser",
-            last_name: "test",
-            email: "mockuser@gmail.com",
-            password: "123456"
-            }, app
-            )
+
 
     const result = await request(app.getHttpServer())
       .post('/playlists')
