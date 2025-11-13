@@ -187,6 +187,75 @@ describe('PlaylistController (e2e)', () => {
   expect(results.body[0].name).toBe("life is good"); 
   })
 
+  it('finds one playlist', async () => {
+    const user = await createUser(
+    {
+      first_name: "Deezi",
+      last_name: "Codes",
+      email: "deezicodes@gmail.com",
+      password: "123456"
+    },
+    app
+  );
+
+  const artist = await createArtist(user.id, app);
+
+ 
+  const durationDate = new Date(0);
+  durationDate.setSeconds(120);
+  const newSong = await createSong(
+    {
+      title: "flying",
+      artists: [artist.id],
+      release_date: new Date("2025-10-12"),
+      duration: durationDate,
+      lyrics: "Flying .... "
+    },
+    app
+  );
+
+ 
+  const user2 = await createUser(
+    {
+      first_name: "mockuser",
+      last_name: "test",
+      email: "mockuser@gmail.com",
+      password: "123456"
+    },
+    app
+  );
+
+
+  const playlist = await createPlaylist(
+    {
+      name: "life is good",
+      songs: [newSong.id],
+      user: user2.id
+    },
+    app
+  );
+
+  
+  const loginResponse = await request(app.getHttpServer())
+    .post('/auth/login')
+    .send({ email: user2.email, password: "123456" })
+    .expect(201);
+
+  const accessToken = loginResponse.body.access_token;
+  expect(accessToken).toBeDefined();
+
+  
+  const results = await request(app.getHttpServer())
+    .get(`/playlists/${playlist.id}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .set('Accept', 'application/json')
+    .expect(200);
+
+ 
+  expect(results.body).toBeDefined();
+  expect(results.body.name).toBe("life is good"); 
+  })
+
 it('find user playlists', async () => {
  
   const user = await createUser(
