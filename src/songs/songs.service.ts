@@ -1,4 +1,4 @@
-import { Inject, Injectable, Scope } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { DeleteResult, In, Repository, UpdateResult } from 'typeorm';
 import { Song } from './song.entity';
 import { CreateSongDTO } from './dto/create-song-dto';
@@ -13,7 +13,7 @@ export class SongsService {
         @InjectRepository(Song) 
         private songsRepository: Repository<Song>,
         @InjectRepository(Artist)
-        private artistRepository: Repository<Artist>
+        private artistRepo: Repository<Artist>
        ){ }
 
 
@@ -26,8 +26,21 @@ export class SongsService {
         song.lyrics = songDTO.lyrics;
         song.release_date = songDTO.release_date;
 
-        const artists = await this.artistRepository.findBy({id: In(songDTO.artists)});
-        song.artists = artists;
+           
+        if (songDTO.artists?.length) {
+            const artists = await this.artistRepo.findBy({ id: In(songDTO.artists) });
+
+    
+            if (!artists || artists.length === 0) {
+            throw new NotFoundException(
+                `No artists found for IDs: [${songDTO.artists.join(', ')}]`,
+            );
+            }
+
+            song.artists = artists;
+        } else {
+            throw new NotFoundException('No artist IDs provided for this song');
+        }
 
         return  await this.songsRepository.save(song);
         

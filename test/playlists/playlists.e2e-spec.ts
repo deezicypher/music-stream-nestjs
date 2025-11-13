@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { PlaylistsModule } from 'src/playlists/playlists.module';
-import { JwtAuthGaurd } from 'src/auth/jwt-guard';
+import { JwtAuthGuard } from 'src/auth/jwt-guard';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Song } from 'src/songs/song.entity';
@@ -14,6 +14,8 @@ import { createArtist } from 'test/helpers/create-artist.helper';
 import { createSong } from 'test/helpers/create-song.helper';
 import { Artist } from 'src/artists/artist.entity';
 import { ArtistsModule } from 'src/artists/artists.module';
+import { createPlaylist } from 'test/helpers/create-playlist.helper';
+import { AuthModule } from 'src/auth/auth.module';
 
 
 describe('PlaylistController (e2e)', () => {
@@ -23,6 +25,7 @@ describe('PlaylistController (e2e)', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [PlaylistsModule // playist module already imports user,song
         ,ArtistsModule,
+        AuthModule,
         ConfigModule.forRoot({
             envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
             isGlobal:true
@@ -48,17 +51,18 @@ describe('PlaylistController (e2e)', () => {
             return process.env[key] || null;
         },
         })
-    .overrideGuard(JwtAuthGaurd)
+    .overrideGuard(JwtAuthGuard)
     .useValue({canActivate : context => {
                 const req = context.switchToHttp().getRequest();
-                req.user = { userId: 1, email: 'mock@user.com' };
+                req.user = { userId: 2, email: 'mock@user.com' };
             return true;
               }})
     .compile();
 
     app = moduleFixture.createNestApplication();
+
     await app.init();
-  });
+  }); 
 
   afterEach(async() => {
     const songRepository = app.get(getRepositoryToken(Song));
@@ -114,4 +118,76 @@ describe('PlaylistController (e2e)', () => {
       
       expect(result.body.name).toBe("life is good")
   });
+
+it('find user playlists', async () => {
+ 
+  const user = await createUser(
+    {
+      first_name: "Deezi",
+      last_name: "Codes",
+      email: "deezicodes@gmail.com",
+      password: "123456"
+    },
+    app
+  );
+
+  const artist = await createArtist(user.id, app);
+
+ 
+  const durationDate = new Date(0);
+  durationDate.setSeconds(120);
+  const newSong = await createSong(
+    {
+      title: "flying",
+      artists: [artist.id],
+      release_date: new Date("2025-10-12"),
+      duration: durationDate,
+      lyrics: "Flying .... "
+    },
+    app
+  );
+
+ 
+  const user2 = await createUser(
+    {
+      first_name: "mockuser",
+      last_name: "test",
+      email: "mockuser@gmail.com",
+      password: "123456"
+    },
+    app
+  );
+
+
+  await createPlaylist(
+    {
+      name: "life is good",
+      songs: [newSong.id],
+      user: user2.id
+    },
+    app
+  );
+
+  
+  const loginResponse = await request(app.getHttpServer())
+    .post('/auth/login')
+    .send({ email: user2.email, password: "123456" })
+    .expect(201);
+
+  const accessToken = loginResponse.body.access_token;
+  expect(accessToken).toBeDefined();
+
+  
+  const results = await request(app.getHttpServer())
+    .get(`/playlists/user/${user2.id}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .set('Accept', 'application/json')
+    .expect(200);
+
+ 
+  expect(results.body).toHaveLength(1);
+  expect(results.body[0].name).toBe("life is good"); 
 });
+
+});
+ 

@@ -110,6 +110,33 @@ describe('SongsController (e2e)', () => {
         expect(results.body.items[0].title).toEqual(newSOng.title)
     })
 
+    it('/Get song', async () => {
+             const user = await createUser(
+            {
+            first_name: "Deezi",
+            last_name: "Codes",
+            email: "deezicodes@gmail.com",
+            password: "123456"
+            }, app
+            )
+        const artist =  await createArtist(user.id,app)
+
+        const durationDate = new Date(0);
+        durationDate.setSeconds(120);
+        const newSOng = await createSong({
+            title:"flying",
+        artists: [artist.id],
+        release_date: new Date("2025-10-12"),
+        duration: durationDate,
+        lyrics: "Flying .... "
+        }, app)
+        const results = await request(app.getHttpServer()).get(`/songs/${newSOng.id}`)
+        expect(results.statusCode).toBe(200)      
+        expect(results.body).toBeDefined()
+        expect(results.body.title).toEqual(newSOng.title)
+
+    });
+
     it('/Puts song/:id', async () => {
         const user = await createUser(
             {

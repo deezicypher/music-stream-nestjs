@@ -20,8 +20,18 @@ export class PlaylistsService {
     async create(playlistDto:CreatePlayListDto):Promise<Playlist>{
         const playlist = new Playlist()
         playlist.name = playlistDto.name;
-        const songs = await this.songRepo.findBy({id: In(playlistDto.songs)})
-        playlist.songs = songs
+
+        if(playlistDto.songs.length) {
+            const songs = await this.songRepo.findBy({id: In(playlistDto.songs)})
+          
+            if(!songs || songs.length === 0 ){
+                throw new NotFoundException(`No songs found for IDs [${playlistDto.songs.join(', ')}]`)
+            }
+
+              playlist.songs = songs
+        }else{
+            throw new NotFoundException("No songs ID provided")
+        }
 
         const user = await this.userRepo.findOneBy({id:playlistDto.user})
         if (!user) {

@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
 import { LoginDTO } from './dto/login-dto';
-import { JwtAuthGaurd } from './jwt-guard';
+import { JwtAuthGuard } from './jwt-guard';
 
 describe('AuthController', () => {
   let controller: AuthController;

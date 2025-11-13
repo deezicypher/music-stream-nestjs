@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, ParseIntPipe, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { PlaylistsService } from './playlists.service';
 import { CreatePlayListDto } from './dto/create-playlist-dto';
 import { Playlist } from './playlist.entity';
-import { JwtAuthGaurd } from 'src/auth/jwt-guard';
+import { JwtAuthGuard } from 'src/auth/jwt-guard';
+import { MatchUserIdGuard } from 'src/auth/match-userid.guard';
 
 @Controller('playlists')
 export class PlaylistsController {
@@ -11,7 +12,7 @@ export class PlaylistsController {
     ){};
 
     @Post()
-    @UseGuards(JwtAuthGaurd)
+    @UseGuards(JwtAuthGuard)
     create ( 
         @Body()
         playlistDto:CreatePlayListDto):Promise<Playlist>{
@@ -19,13 +20,13 @@ export class PlaylistsController {
     }
 
     @Get()
-    @UseGuards(JwtAuthGaurd)
+    @UseGuards(JwtAuthGuard)
     findAll():Promise<Playlist[]>{
         return this.playlistService.findAll()
     }
 
     @Get(':id')
-    @UseGuards(JwtAuthGaurd)
+    @UseGuards(JwtAuthGuard)
     findOne(
         @Param('id', new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
         id:number
@@ -33,13 +34,13 @@ export class PlaylistsController {
         return this.playlistService.findOne(id)
     }
 
-    @Get()
-    @UseGuards(JwtAuthGaurd)
+    @Get('user/:id')
+    @UseGuards(JwtAuthGuard)
     findUserPlaylist(
-        @Request()
-        req
+        @Param('id',new ParseIntPipe({errorHttpStatusCode:HttpStatus.NOT_ACCEPTABLE}))
+        id:number
     ):Promise<Playlist[]>{
-        return this.playlistService.findUserPlaylist(req.user.id)
+        return this.playlistService.findUserPlaylist(id)
     }
 
 }

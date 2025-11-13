@@ -12,7 +12,7 @@ import { Artist } from "src/artists/artist.entity";
 import { AuthModule } from "src/auth/auth.module";
 import { JwtModule } from "@nestjs/jwt";
 import { JwtArtistGuard } from "src/auth/jwt-artist.guard";
-import { JwtAuthGaurd } from "src/auth/jwt-guard";
+import { JwtAuthGuard } from "src/auth/jwt-guard";
 
 
 describe('AuthController (e2e)', () => {
@@ -51,7 +51,7 @@ describe('AuthController (e2e)', () => {
               return process.env[key] || null;
             },
           })
-          .overrideGuard(JwtAuthGaurd)
+          .overrideGuard(JwtAuthGuard)
           .useValue({canActivate : context => {
             const req = context.switchToHttp().getRequest();
             req.user = { userId: 1, email: 'mock@user.com' };

@@ -5,7 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login-dto';
 import { Enable2FAType } from './types/auth-types';
-import { JwtAuthGaurd } from './jwt-guard';
+import { JwtAuthGuard } from './jwt-guard';
 import { Verify2faDTO } from './dto/verify2fa.dto';
 import { UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
@@ -45,7 +45,7 @@ export class AuthController {
     }
 
     @Post('enable-2fa')
-    @UseGuards(JwtAuthGaurd) 
+    @UseGuards(JwtAuthGuard) 
     enable2fa(
         @Request()
         req
@@ -64,7 +64,7 @@ export class AuthController {
     }
 
     @Get('disable-2fa')
-    @UseGuards(JwtAuthGaurd)
+    @UseGuards(JwtAuthGuard)
     disable2fa(
         @Request()
         req
