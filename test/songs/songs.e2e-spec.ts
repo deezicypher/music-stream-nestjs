@@ -195,6 +195,26 @@ describe('SongsController (e2e)', () => {
 
     })
 
+    it('Fails to creatre song if artist is not found', async () => {
+        
+
+        const createSongDTO = {
+            title:"flying",
+        artists: [1],
+        release_date: new Date("2025-10-12"),
+        duration: "00:02:00",
+        lyrics: "Flying .... "
+        }
+        
+  
+        const results = await request(app.getHttpServer())
+        .post('/songs')
+        .send(createSongDTO)
+        .expect(404)
+
+  
+    })
+
     it('/Delete song', async () => {
         const user = await createUser(
             {
