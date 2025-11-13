@@ -71,7 +71,7 @@ describe('PlaylistsController', () => {
   })
 
   it('it calls user playlist method', async () => {
-    const result = await controller.findUserPlaylist({user:{id:1}})
+    const result = await controller.findUserPlaylist(1)
     expect(result).toEqual(mockPlaylistArray)
   })
 });
