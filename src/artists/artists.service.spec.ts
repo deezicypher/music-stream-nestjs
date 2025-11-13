@@ -84,4 +84,14 @@ describe('ArtistsService', () => {
     expect(artistRepo.save).toHaveBeenCalled()
     expect(result).toEqual(artist)
   })
+  it('should throw NotfoundExpection if user is not found', async () => {
+    (userRepo.findOneBy as jest.Mock).mockResolvedValueOnce(null)
+    await expect(service.create(artist)).rejects.toThrow('User not found')
+
+  })
+  it('finds artist', async () => {
+    const result = await service.findArtist(1)
+    expect(artistRepo.findOneBy).toHaveBeenCalledWith({user:{id:1}})
+    expect(result).toEqual(artist)
+  })
 });

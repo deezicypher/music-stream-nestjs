@@ -119,7 +119,7 @@ describe('PlaylistController (e2e)', () => {
       expect(result.body.name).toBe("life is good")
   });
 
-  it('fails to create playlist, if song is not found', async () => {
+  it('should throw NotFoundException, if song is not found', async () => {
     const user = await createUser(
             {
             first_name: "Deezi",
@@ -142,7 +142,7 @@ describe('PlaylistController (e2e)', () => {
       .expect(404)
  
   })
-  it('fails to create playlist, if user is not found', async () => {
+  it('should throw NotFoundException, if user is not found', async () => {
     const user = await createUser(
             {
             first_name: "Deezi",
@@ -173,6 +173,7 @@ describe('PlaylistController (e2e)', () => {
             user: 999
       })
       .expect(404)
+    
     
  
   })

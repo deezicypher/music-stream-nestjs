@@ -195,7 +195,7 @@ describe('SongsController (e2e)', () => {
 
     })
 
-    it('Fails to creatre song if artist is not found', async () => {
+    it('should throw NotFoundException, if artist is not found', async () => {
         
 
         const createSongDTO = {
