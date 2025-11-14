@@ -90,4 +90,19 @@ describe('ArtisyController (e2e)', () => {
             
     })
 
+    it('should throw NotFoundException, if user is not found', async () => {
+          
+        const artist = {
+            user: 99,
+            songs:[]
+        }  
+
+        const result = await request(app.getHttpServer())
+        .post('/artists')
+        .send(artist)
+        .expect(404)
+
+      
+    })
+
 });
