@@ -11,6 +11,7 @@ import { Artist } from 'src/artists/artist.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-guard';
 import { createUser } from 'test/helpers/create-user.helper';
 import { Playlist } from 'src/playlists/playlist.entity';
+import { createArtist } from 'test/helpers/create-artist.helper';
 
 describe('ArtisyController (e2e)', () => {
   let app: INestApplication<App>;
@@ -103,6 +104,24 @@ describe('ArtisyController (e2e)', () => {
         .expect(404)
 
       
+    })
+
+    it('should find the artist', async () => {
+             const user = await createUser(
+                {
+                first_name: "Deezi",
+                last_name: "Codes",
+                email: "deezicodes@gmail.com",
+                password: "123456"
+                }, app
+                )
+        const artist = await createArtist(user.id,app)
+
+        const result = await request(app.getHttpServer())
+        .get(`/artists/${artist.id}`)
+        .expect(200)
+
+        expect(result.body.id).toBe(artist.id)
     })
 
 });
