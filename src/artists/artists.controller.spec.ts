@@ -39,4 +39,10 @@ describe('ArtistsController', () => {
     expect(mockArtistService.create).toHaveBeenCalledWith(artist)
     expect(result).toEqual(result)
   })
+
+  it('should find artist', async () => {
+    const result = await controller.findOne(1)
+    expect(mockArtistService.findArtist).toHaveBeenCalledWith(1)
+    expect(result).toEqual(artist)
+  })
 });
