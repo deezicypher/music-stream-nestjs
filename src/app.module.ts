@@ -15,6 +15,7 @@ import { dataSourceOptions, typeOrmAsyncConfig } from 'db/data-source';
 import { SeedModule } from './seed/seed.module';
 import configuration from './config/configuration';
 import { validate } from 'env.validation';
+import { EventsModule } from './events/events.module';
 
 
 
@@ -33,7 +34,8 @@ import { validate } from 'env.validation';
     AuthModule,
     UsersModule,
     ArtistsModule,
-    SeedModule],
+    SeedModule,
+    EventsModule],
   controllers: [AppController],
   providers: [AppService],
 })
