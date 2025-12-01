@@ -13,6 +13,10 @@ export class CreateSongDTO{
     readonly artists;
 
     @IsNotEmpty()
+    @IsString()
+    readonly filePath:string;
+
+    @IsNotEmpty()
     @IsDateString()
     readonly release_date: Date;
 

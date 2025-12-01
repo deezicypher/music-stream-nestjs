@@ -1,4 +1,4 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, HttpException, HttpStatus, Inject, Param, ParseIntPipe, Post, Put, Query, Request, Scope, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, HttpException, HttpStatus, Inject, Param, ParseFilePipe, ParseIntPipe, Post, Put, Query, Request, Scope, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { type Connection } from 'src/common/constants/connection';
@@ -7,6 +7,9 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { UpdateSongDTO } from './dto/update-song-dto';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtArtistGuard } from 'src/auth/jwt-artist.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { IsImgValidator } from 'src/validators/is-img.validator';
 
 @Controller({path:'songs', scope:Scope.REQUEST})
 export class SongsController {
@@ -17,9 +20,33 @@ export class SongsController {
         ;
     @Post()
     @UseGuards(JwtArtistGuard)
-    create(@Body() createSongDTO: CreateSongDTO): Promise<Song>{
-        
-        return this.songsService.create(createSongDTO);
+    @UseInterceptors(
+        FileInterceptor('file',{
+            storage:diskStorage({
+            destination: './upload/covers',
+            filename: (req, file, cb) => {
+                cb(null, `${Date.now()}-${file.originalname}`);
+            }
+            }),
+            limits: {
+                fileSize:200_000
+            }
+        })
+    )
+    create(@Body() createSongDTO: CreateSongDTO,
+        @UploadedFile(new ParseFilePipe(
+            {
+                validators: [
+                    new IsImgValidator()
+                ],
+                exceptionFactory: () => new BadRequestException('File is required and must be a valid type'),
+                errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
+            }
+        ))
+        file:Express.Multer.File
+    ): Promise<Song>{
+        const filePath = `/upload/covers/${file.filename}`
+        return this.songsService.create({...createSongDTO,filePath});
     };
 
     @Get()

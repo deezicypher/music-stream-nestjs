@@ -10,6 +10,9 @@ export class Song{
     @Column()
     title: string;
 
+    @Column()
+    filePath: string;
+
     //@Column('varchar', {array:true})
     //artists: string[];
     @ManyToMany(()=>Artist, (artist) => artist.songs, {cascade:true})

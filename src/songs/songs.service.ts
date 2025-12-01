@@ -25,6 +25,7 @@ export class SongsService {
         song.duration = songDTO.duration;
         song.lyrics = songDTO.lyrics;
         song.release_date = songDTO.release_date;
+        song.filePath = songDTO.filePath;
 
            
         if (songDTO.artists?.length) {
