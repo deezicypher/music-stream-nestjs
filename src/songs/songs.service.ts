@@ -26,7 +26,7 @@ export class SongsService {
         song.lyrics = songDTO.lyrics;
         song.release_date = songDTO.release_date;
         song.filePath = songDTO.filePath;
-
+ 
            
         if (songDTO.artists?.length) {
             const artists = await this.artistRepo.findBy({ id: In(songDTO.artists) });
