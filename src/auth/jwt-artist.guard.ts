@@ -15,6 +15,6 @@ export class JwtArtistGuard extends AuthGuard('jwt') {
         if(user.artistId){
             return user
         }
-        throw err || new UnauthorizedException()
+        throw err || new UnauthorizedException("You're not an artist")
     }
 }
