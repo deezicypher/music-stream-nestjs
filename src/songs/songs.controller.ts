@@ -46,7 +46,7 @@ export class SongsController {
         file:Express.Multer.File
     ): Promise<Song>{
         const filePath = `/upload/covers/${file.filename}`
-        return this.songsService.create({...createSongDTO,filePath});
+        return this.songsService.create(createSongDTO,filePath);
     };
 
     @Get()

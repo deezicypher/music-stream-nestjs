@@ -17,7 +17,7 @@ export class SongsService {
        ){ }
 
 
-    async create(songDTO:CreateSongDTO):Promise<Song>{
+    async create(songDTO:CreateSongDTO,filePath):Promise<Song>{
 
         // save the song to database
         const song = new Song()
@@ -25,11 +25,20 @@ export class SongsService {
         song.duration = songDTO.duration;
         song.lyrics = songDTO.lyrics;
         song.release_date = songDTO.release_date;
-        song.filePath = songDTO.filePath;
+        song.filePath = filePath;
  
            
         if (songDTO.artists?.length) {
-            const artists = await this.artistRepo.findBy({ id: In(songDTO.artists) });
+
+            const artistIds: number[] = Array.isArray(songDTO.artists)?
+            songDTO.artists.map(id => Number(id))
+            :
+            [Number(songDTO.artists)]
+
+            const artists = await this.artistRepo.findBy({
+                id: In(artistIds)
+            }
+        );
 
     
             if (!artists || artists.length === 0) {
@@ -51,7 +60,15 @@ export class SongsService {
         return this.songsRepository.find()
     }
 
-    findOne(id:number):Promise<Song | null>{
+    async findOne(id:number){
+        // const song = await this.songsRepository.findOne({
+        //     where: { id: 1 },
+        //     relations: ['artists'], // <-- this loads the artists
+        //     });
+        //     if (!song) {
+        //     throw new Error('Song not found');
+        //     }
+        //     console.log(song.artists); 
         return this.songsRepository.findOneBy({id})
     }
 

@@ -1,3 +1,4 @@
+import { Transform } from "class-transformer";
 import { IsArray, IsDateString, IsMilitaryTime, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class CreateSongDTO{
@@ -10,11 +11,31 @@ export class CreateSongDTO{
     @IsArray()
     //@IsString({each:true})
     @IsNumber({}, {each:true})
-    readonly artists;
+    @Transform(({value})=> {
+        if(typeof value === 'string'){
+            try {
+                 const parsed =  JSON.parse(value)
 
-    @IsNotEmpty()
-    @IsString()
-    readonly filePath:string;
+                 // Ensure it's an array and convert to number
+                 return Array.isArray(parsed)? parsed.map(v => Number(v)): [Number(parsed)]
+            } catch  {
+                return [Number(value)]
+            }
+        }
+        // If already an array, ensure numbers
+        if (Array.isArray(value)) {
+            return value.map(v => Number(v));
+        }
+        return [Number(value)];
+      
+    })
+//      when sending multiple fields with the same name in Postman formdata
+//     @Transform(({ value }) => {
+//     // Handle both array and single value
+//     const arr = Array.isArray(value) ? value : [value];
+//     return arr.map(v => parseInt(v, 10));  // Convert strings to numbers
+// })
+    readonly artists;
 
     @IsNotEmpty()
     @IsDateString()
