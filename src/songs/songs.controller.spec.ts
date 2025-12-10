@@ -79,7 +79,14 @@ describe('SongsController', () => {
         duration: durationDate,
         lyrics: "Flying .... "
       }
-      const song = await controller.create(newSongDTO)
+      const mockFile = {
+      originalname: 'cover.jpg',
+      filename: 'mock-cover.jpg',
+      mimetype: 'image/jpeg',
+      size: 1234,
+    } as Express.Multer.File;
+
+      const song = await controller.create(newSongDTO,mockFile)
       expect(song).toEqual({id:1,...newSongDTO})
       expect(mockSongsService.create).toHaveBeenCalledWith(newSongDTO)
     })

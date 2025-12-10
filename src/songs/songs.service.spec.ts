@@ -90,8 +90,8 @@ describe('SongsService', () => {
   })
 
   it('should create the song', async () => {
-
-    const song = await service.create(oneSong)
+    const filePath = "/upload/covers/1765394723130-candles.png"
+    const song = await service.create(oneSong,filePath)
     expect(songRepo.save).toHaveBeenCalledTimes(1)
     expect(artistRepo.findBy).toHaveBeenCalledTimes(1)
     expect(songRepo.save).toHaveBeenCalledWith(expect.objectContaining({

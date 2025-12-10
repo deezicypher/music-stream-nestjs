@@ -17,7 +17,7 @@ export class SongsService {
        ){ }
 
 
-    async create(songDTO:CreateSongDTO,filePath):Promise<Song>{
+    async create(songDTO:CreateSongDTO,filePath:string):Promise<Song>{
 
         // save the song to database
         const song = new Song()
