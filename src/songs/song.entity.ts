@@ -10,7 +10,7 @@ export class Song{
     @Column()
     title: string;
 
-    @Column()
+    @Column({nullable:true})
     filePath: string;
 
     //@Column('varchar', {array:true})
