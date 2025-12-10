@@ -29,16 +29,8 @@ export class SongsService {
  
            
         if (songDTO.artists?.length) {
-
-            const artistIds: number[] = Array.isArray(songDTO.artists)?
-            songDTO.artists.map(id => Number(id))
-            :
-            [Number(songDTO.artists)]
-
-            const artists = await this.artistRepo.findBy({
-                id: In(artistIds)
-            }
-        );
+            
+            const artists = await this.artistRepo.findBy({ id: In(songDTO.artists) });
 
     
             if (!artists || artists.length === 0) {

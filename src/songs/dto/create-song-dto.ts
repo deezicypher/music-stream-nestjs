@@ -13,21 +13,9 @@ export class CreateSongDTO{
     @IsNumber({}, {each:true})
     @Transform(({value})=> {
         if(typeof value === 'string'){
-            try {
-                 const parsed =  JSON.parse(value)
-
-                 // Ensure it's an array and convert to number
-                 return Array.isArray(parsed)? parsed.map(v => Number(v)): [Number(parsed)]
-            } catch  {
-                return [Number(value)]
-            }
+            return JSON.parse(value)
         }
-        // If already an array, ensure numbers
-        if (Array.isArray(value)) {
-            return value.map(v => Number(v));
-        }
-        return [Number(value)];
-      
+        return value
     })
 //      when sending multiple fields with the same name in Postman formdata
 //     @Transform(({ value }) => {
