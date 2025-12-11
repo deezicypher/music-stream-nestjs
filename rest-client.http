@@ -10,7 +10,7 @@ GET http://localhost:3000/songs/1
 ### Create song
 POST http://localhost:3000/songs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkxleGk1NUB5YWhvby5jb20iLCJ1c2VySWQiOjIsImFydGlzdElkIjoxLCJpYXQiOjE3NjI4NjA0NjIsImV4cCI6MTc2Mjk0Njg2Mn0.G9s5-GYenE44UR1NPeZni4V4Ad9h93c2_DmHkzFQcTU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRlZXppY29kZXNAZ21haWwuY29tIiwidXNlcklkIjo2LCJpYXQiOjE3NjUzMTM4MTgsImV4cCI6MTc2NTQwMDIxOH0.lFY-Zg4qm3KfibVVvx22OsNpDGA92zW5c6WCHDkDvoU
 
 {   "title":"Mavin's room",
     "artists":[1],
@@ -65,6 +65,14 @@ Content-Type: application/json
 "password": "123456"
 }
 
+### Create Artist
+POST http://localhost:3000/artists
+Content-Type: application/json
+
+{
+"user": 6
+}
+
 ### Get Profile
 GET http://localhost:3000/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5kb2VAZ21haWwuY29tIiwidXNlcklkIjo1LCJpYXQiOjE3NjE2MjEzNzEsImV4cCI6MTc2MTcwNzc3MX0.sLgZgR7VuBqObN1z21nTnBKjWdmYOLWnJkDkQxc5yD8
@@ -88,7 +96,7 @@ Content-Type: application/json
 
 {
 "userId":"6",
-"token": "331209"
+"token": "243441"
 }
 
 ### Test Env
