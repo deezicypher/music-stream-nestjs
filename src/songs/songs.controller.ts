@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, HttpException, HttpStatus, Inject, Param, ParseFilePipe, ParseIntPipe, Post, Put, Query, Request, Scope, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, HttpException, HttpStatus, Inject, Param, ParseFilePipe, ParseFilePipeBuilder, ParseIntPipe, Post, Put, Query, Request, Scope, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { SongsService } from './songs.service';
 import { CreateSongDTO } from './dto/create-song-dto';
 import { type Connection } from 'src/common/constants/connection';
@@ -28,13 +28,14 @@ export class SongsController {
                 cb(null, `${Date.now()}-${file.originalname}`);
             }
             }),
-            limits: {
-                fileSize:200_000
-            }
+            // limits: {
+            //     fileSize:200_000
+            // }
         })
     )
     create(@Body() createSongDTO: CreateSongDTO,
-        @UploadedFile(new ParseFilePipe(
+        @UploadedFile(
+            new ParseFilePipe(
             {
                 validators: [
                     new IsImgValidator()
@@ -42,7 +43,8 @@ export class SongsController {
                 exceptionFactory: () => new BadRequestException('File is required and must be a valid type'),
                 errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
             }
-        ))
+        )
+        )
         file:Express.Multer.File
     ): Promise<Song>{
         const filePath = `/upload/covers/${file.filename}`
