@@ -16,6 +16,8 @@ import { SeedModule } from './seed/seed.module';
 import configuration from './config/configuration';
 import { validate } from 'env.validation';
 import { EventsModule } from './events/events.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskService } from './task/task.service';
 
 
 
@@ -29,6 +31,7 @@ import { EventsModule } from './events/events.module';
       validate:validate
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
+    ScheduleModule.forRoot(),
     SongsModule,
     PlaylistsModule,
     AuthModule,
@@ -37,6 +40,6 @@ import { EventsModule } from './events/events.module';
     SeedModule,
     EventsModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TaskService],
 })
 export class AppModule {}
