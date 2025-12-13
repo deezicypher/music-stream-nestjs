@@ -18,7 +18,8 @@ import { validate } from 'env.validation';
 import { EventsModule } from './events/events.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TaskService } from './task/task.service';
-
+import { AudioModule } from './audio/audio.module';
+import {BullModule} from '@nestjs/bull'
 
 
 
@@ -32,13 +33,20 @@ import { TaskService } from './task/task.service';
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     ScheduleModule.forRoot(),
+    BullModule.forRoot({
+      redis: {
+      host: "localhost",
+      port: 6379,
+      },
+    }),
     SongsModule,
     PlaylistsModule,
     AuthModule,
     UsersModule,
     ArtistsModule,
     SeedModule,
-    EventsModule],
+    EventsModule,
+    AudioModule],
   controllers: [AppController],
   providers: [AppService, TaskService],
 })
