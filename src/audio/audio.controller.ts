@@ -13,6 +13,7 @@ export class AudioController {
         async convert() {
         await this.audioQueue.add("convert", {
         file: "sample.wav",
+        id:1
         });
         }
 }
