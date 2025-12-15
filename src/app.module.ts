@@ -20,7 +20,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { TaskService } from './task/task.service';
 import { AudioModule } from './audio/audio.module';
 import {BullModule} from '@nestjs/bull'
-
+import {EventEmitterModule} from '@nestjs/event-emitter'
 
 
 @Module({
@@ -39,6 +39,7 @@ import {BullModule} from '@nestjs/bull'
       port: 6379,
       },
     }),
+    EventEmitterModule.forRoot(),
     SongsModule,
     PlaylistsModule,
     AuthModule,
