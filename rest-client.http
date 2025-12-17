@@ -101,3 +101,7 @@ Content-Type: application/json
 
 ### Test Env
 GET http://localhost:3000/auth/test
+
+
+### Convert
+POST  http://localhost:3000/audio/convert
